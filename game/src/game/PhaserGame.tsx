@@ -7,10 +7,14 @@ import {
   useRef,
   useState,
 } from "react";
-import StartGame from "./main";
+import StartGame from "./StartGame";
 import { EventBus } from "./EventBus";
-import { BricksGame } from "./scenes/Game";
+import { BricksScene } from "./scene/BricksScene";
 import { useWindowSize } from "usehooks-ts";
+
+import style from "./PhaserGame.module.css";
+
+
 
 export interface IRefPhaserGame {
   game: Phaser.Game | null;
@@ -18,14 +22,13 @@ export interface IRefPhaserGame {
 }
 
 interface IProps {
-  currentActiveScene?: (scene_instance: Phaser.Scene) => void;
+  // currentActiveScene?: (scene_instance: Phaser.Scene) => void;
 }
 
 export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
-  ({ currentActiveScene }, ref) => {
-    const game = useRef<Phaser.Game | null>(null);
 
-    console.log(currentActiveScene);
+  ( {}, ref) => {
+    const game = useRef<Phaser.Game | null>(null);
 
     const { width = window.innerWidth, height = window.innerHeight } = useWindowSize();
 
@@ -39,9 +42,9 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
       // if ( game.current !== null ) {
       game.current = StartGame("gameContainer");
       if (typeof ref === "function") {
-        ref({ game: game.current, scene: new BricksGame() });
+        ref({ game: game.current, scene: new BricksScene() });
       } else if (ref) {
-        ref.current = { game: game.current, scene: new BricksGame() };
+        ref.current = { game: game.current, scene: new BricksScene() };
       }
       // }
     }, [game, ref, width, height]);
@@ -107,7 +110,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
     return (
       <div
-        className="transition-all duration-300 ease-in-out overflow-hidden"
+        className={style.container}
         style={{
           transform: `translateY( ${on ? 0 : "20vh"} )`,
           opacity: on ? 1 : 0,

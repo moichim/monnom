@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-import { BricksGame } from "../scenes/Game";
+import { BricksScene } from "../scene/BricksScene";
 import { MovementManager } from "./movements/MovementManager";
 
 export enum BrickMovements {
@@ -25,7 +25,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
   constructor(
     name: string,
-    scene: BricksGame,
+    scene: BricksScene,
     x: number,
     y: number,
     texture: string,
@@ -35,7 +35,8 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
 
     const shapes = scene.cache.json.get( "shapes" );
-    const shape = shapes["texture"] as Phaser.Types.Physics.Matter.MatterBodyConfig;
+
+    const shape = shapes[texture] as Phaser.Types.Physics.Matter.MatterBodyConfig;
     shape.density = 1;
     shape.restitution = 1;
     shape.friction = 0.1;
@@ -53,8 +54,6 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
         // chamfer: 16, 
         shape: shape as Phaser.Types.Physics.Matter.MatterSetBodyConfig
       });
-
-      console.log( "kešované tvary", name, scene.cache.json.get( "shapes" ) );
 
     this.name = name;
 
@@ -121,9 +120,11 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
     this.movement.fall();
   }
 
-  public preUpdate(delta: number, time: number) {
+  public preUpdate(
+    // delta: number, 
+    // time: number
+  ) {
     this.movement.update();
-    console.log( delta, time );
   }
 
   getStoreData(

@@ -1,11 +1,12 @@
-import { BricksGame } from "../scenes/Game";
-import { Brick } from "./Brick";
+import { BricksScene } from "./BricksScene";
+import { Brick } from "../objects/Brick";
 
+/** Manages the bricks of the scene */
 export class BrickManager {
   protected array: Brick[] = [];
   public readonly map: Map<string, Brick> = new Map();
 
-  constructor(protected readonly scene: BricksGame) {}
+  constructor(protected readonly scene: BricksScene) {}
 
 
   /** Add a new brick if not exists yet */

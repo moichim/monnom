@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { CompositionSnapshotType } from "../../game/objects/CompositionManager";
+import { CompositionSnapshotType } from "../../game/scene/CompositionManager";
 import { SceneStateBrick } from "./SceneStateBrick";
 
 type SceneStateProps = {

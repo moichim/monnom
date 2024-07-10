@@ -5,7 +5,7 @@ import {
 } from "@headlessui/react";
 import React, { useMemo } from "react";
 import { useWindowSize } from "usehooks-ts";
-import { CompositionSnapshotType } from "../../game/objects/CompositionManager";
+import { CompositionSnapshotType } from "../../game/scene/CompositionManager";
 import { SceneState } from "./SceneState";
 
 type CompositionPopoverProps = {

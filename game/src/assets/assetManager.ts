@@ -1,4 +1,4 @@
-import { BricksGame } from "../game/scenes/Game";
+import { BricksScene } from "../game/scene/BricksScene";
 
 type AssetDefinition = {
     url: string,
@@ -7,19 +7,19 @@ type AssetDefinition = {
 
 const defs = new Map<string,AssetDefinition>();
 
+const isLocal = window.location.href.includes( "localhost:5173" );
+
+const urlPrefix = isLocal ? "" : "/wp-content/themes/monnom/game/";
+
 const register = (
     key: string,
     url: string
 ) => {
-    defs.set( key, { key, url } );
+    defs.set( key, { 
+        key, 
+        url: urlPrefix + url 
+    } );
 }
-
-register("block", "assets/sbornik.png");
-register("manual", "assets/manual.png");
-register( "kacovsky", "assets/kacovsky-palice.png" );
-register( "sbornik", "assets/sbornik.png" );
-register( "kielbusova", "assets/kielbusova-2.png" );
-register( "varecka", "assets/kielbusova-3.png" );
 
 // 
 register( "kostka", "assets/bricks/kostka.png" );
@@ -34,7 +34,7 @@ export class AssetManager {
 
     static assets = defs;
 
-    static registerToScene( scene: BricksGame ) {
+    static registerToScene( scene: BricksScene ) {
         AssetManager.assets.forEach( item => {
             scene.load.image( item.key, item.url );
         } );

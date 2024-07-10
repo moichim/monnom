@@ -13,9 +13,31 @@ add_action( 'wp_enqueue_scripts', 'twentytwentyfour_parent_theme_enqueue_styles'
  * Enqueue scripts and styles.
  */
 function twentytwentyfour_parent_theme_enqueue_styles() {
-	wp_enqueue_style( 'twentytwentyfour-style', get_template_directory_uri() . '/style.css' );
-	wp_enqueue_style( 'monnom-style',
+
+	wp_enqueue_style( 
+		'twentytwentyfour-style', 
+		get_template_directory_uri() . '/style.css' 
+	);
+	
+	wp_enqueue_style( 
+		'monnom-style',
 		get_stylesheet_directory_uri() . '/style.css',
 		[ 'twentytwentyfour-style' ]
 	);
+
+	wp_enqueue_script( 
+		"monnom-game-script", 
+		get_stylesheet_directory_uri() . "/game/index.js",
+		[],
+		false,
+		[
+			"in_footer" => true
+		]
+	);
+
+	wp_enqueue_style( 
+		"monnom-game-style", 
+		get_stylesheet_directory_uri() . "/game/index.css" 
+	);
+
 }

@@ -1,5 +1,5 @@
 import { AUTO, Game } from "phaser";
-import { BricksGame as MainGame } from "./scenes/Game";
+import { BricksScene as MainGame } from "./scene/BricksScene";
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -12,26 +12,29 @@ const baseConfig: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "matter",
     matter: {
-      debug: true,
+      // debug: true,
     },
+  },
+  audio: {
+    noAudio: true
   },
   scene: [MainGame],
 };
 
 const StartGame = (parent: string) => {
 
-  const bottomOffset = window.innerWidth - 1000;
+  const windowArea = window.innerWidth * window.innerHeight;
 
-  const height = bottomOffset < 0
-    ? window.innerHeight - ( bottomOffset * 1 )
-    : window.innerHeight;
+  const targetFreeArea = windowArea * 4 / 5;
+  const bricksArea = 1454690 / 3;
+  const totalArea = targetFreeArea + bricksArea;
 
-
-    console.log( bottomOffset, window.innerWidth, height );
+  const width = window.innerWidth;
+  const height = totalArea / width;
 
   const config = {
     ...baseConfig,
-    width: window.innerWidth,
+    width: width,
     height: height
 
   };

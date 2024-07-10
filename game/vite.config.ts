@@ -8,6 +8,7 @@ export default defineConfig({
   build: {
     outDir: "../monnom/game",
     emptyOutDir: true,
+    // minify: true,
     rollupOptions: {
       output: {
         entryFileNames: "[name].js",

@@ -1,18 +1,20 @@
 import { EventBus, GameEvents } from "../EventBus";
-import { BricksGame } from "../scenes/Game";
-import { Brick, BrickMovements } from "./Brick";
+import { BricksScene } from "./BricksScene";
+import { Brick, BrickMovements } from "../objects/Brick";
 import Phaser from "phaser";
 import { v4 as uuid } from "uuid";
 
 export type CompositionSnapshotType = ReturnType<CompositionManager["getCurrentSceneSnapshot"]>;
 
+
+/** Manages composition retrieval */
 export class CompositionManager {
 
     protected readonly bricks = this.scene.bricks;
     protected dimensions!: ReturnType< CompositionManager["getSceneDimension"]>
 
     constructor(
-        protected readonly scene: BricksGame
+        protected readonly scene: BricksScene
     ) {
 
     }

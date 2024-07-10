@@ -1,10 +1,10 @@
 import Phaser, { Scene } from "phaser";
 import { AssetManager } from "../../assets/assetManager";
 import { EventBus } from "../EventBus";
-import { BrickManager } from "../objects/BrickManager";
-import { CompositionManager } from "../objects/CompositionManager";
+import { BrickManager } from "./BrickManager";
+import { CompositionManager } from "./CompositionManager";
 
-export class BricksGame extends Scene {
+export class BricksScene extends Scene {
   camera!: Phaser.Cameras.Scene2D.Camera;
   blockTexture!: Phaser.GameObjects.Image;
   gameText!: Phaser.GameObjects.Text;
@@ -21,8 +21,12 @@ export class BricksGame extends Scene {
     this.compositions.init();
     this.matter.world.setBounds();
 
+    const isLocal = window.location.href.includes("localhost:5173");
+
+    const urlPrefix = isLocal ? "" : "/wp-content/themes/monnom/game/";
+
     // Load body shapes
-    this.load.json( "shapes", "assets/bricks/shapes.json" );
+    this.load.json("shapes", urlPrefix + "assets/bricks/shapes.json");
 
 
   }
@@ -34,7 +38,7 @@ export class BricksGame extends Scene {
 
   create() {
 
-    const shapes = this.cache.json.get( "shapes" );
+    const shapes = this.cache.json.get("shapes");
     this.shapes = shapes;
 
 
@@ -142,7 +146,7 @@ export class BricksGame extends Scene {
 
     lowest.forEach((brick) =>
       brick.applyForce(new Phaser.Math.Vector2(
-        ( 0.5 - Math.random() ) * 0.2, 
+        (0.5 - Math.random()) * 0.2,
         -0.3 + -0.5 * Math.random())
       )
     );

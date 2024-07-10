@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { EventBus, GameEvents } from "../game/EventBus";
 import { BrickMovements } from "../game/objects/Brick";
-import { CompositionSnapshotType } from "../game/objects/CompositionManager";
+import { CompositionSnapshotType } from "../game/scene/CompositionManager";
 import { IRefPhaserGame, PhaserGame } from "../game/PhaserGame";
-import { BricksGame } from "../game/scenes/Game";
+import { BricksScene } from "../game/scene/BricksScene";
 import { MovementRadio } from "./movement/movementRadio";
 import { CompositionPopover } from "./state/CompositionsPopover";
 import React from "react";
+
+import styles from "./Controller.module.css"
 
 export const Controller: React.FC = () => {
   const [movement, setMovement] = useState<BrickMovements>(
@@ -17,7 +19,7 @@ export const Controller: React.FC = () => {
   const phaserRef = useRef<IRefPhaserGame | null>(null);
 
   // Reference to the scene
-  const [scene, setScene] = useState<BricksGame | undefined>();
+  const [scene, setScene] = useState<BricksScene | undefined>();
 
   // Stored compositions array
   const [compositions, setCompositions] = useState<CompositionSnapshotType[]>(
@@ -28,7 +30,7 @@ export const Controller: React.FC = () => {
   useEffect(() => {
     EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {
       console.log("přišla scéna!", scene_instance);
-      setScene(scene_instance as BricksGame);
+      setScene(scene_instance as BricksScene);
     });
 
     return () => {
@@ -76,7 +78,7 @@ export const Controller: React.FC = () => {
   };
 
   return (
-    <div className="inset-0 w-screen h-screen overflow-hidden">
+    <div className={styles.container}>
       <PhaserGame ref={phaserRef} />
 
       <header>
