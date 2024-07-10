@@ -82,8 +82,8 @@ export const Controller: React.FC = () => {
       <PhaserGame ref={phaserRef} />
 
       {createPortal( <>
-        <button onClick={ compositionsOffcanvas.open }>Uložené kompozice</button>
-        <button onClick={shuffle}>Shuffle</button>
+        <button onClick={ compositionsOffcanvas.open } className="monnom-header__link">Uložené kompozice</button>
+        <button onClick={shuffle} className="monnom-header__link">Shuffle</button>
         <MovementRadio
             value={movement}
             onChange={(key) => {

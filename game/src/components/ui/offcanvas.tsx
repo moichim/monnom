@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { PropsWithChildren, RefObject, useCallback, useState } from "react";
+import React, { PropsWithChildren, RefObject, useCallback, useEffect, useState } from "react";
 import { useScrollShadow } from "use-scroll-shadow";
 
 export const useOffcanvas = () => {
@@ -32,6 +32,19 @@ export const Offcanvas: React.FC<OffcanvasProps> = props => {
     const classes = classNames("monnom-offcanvas", props.control.isOpen ? "monnom-offcanvas__open" : "monnom-offcanvas__close");
 
     const { elementRef, wrapperRef } = useScrollShadow();
+
+    useEffect( () => {
+
+        const action = (event: KeyboardEvent) => {
+            if ( event.key === "Escape" )
+            props.control.close()
+        }
+
+        document.addEventListener( "keydown" , action );
+
+        return () => { document.removeEventListener( "keydown", action ) }
+
+    }, [props.control] );
 
     return <>
         <div className={classes}>

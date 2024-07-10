@@ -22,13 +22,6 @@ export const createDialog = <TriggerType extends HTMLElement>(
 
     const { trigger, dialog } = getDialogComponents<TriggerType>( triggerId, dialogId );
 
-    
-    
-    
-
-
-    console.log( trigger, dialog );
-
 
     const open = () => {
         // dialog.setAttribute( "open", "true" );

@@ -75,6 +75,21 @@ export class MovementManager {
         this._movement = undefined;
     }
 
+    public placeInCompositionOrFall() {
+        console.log( this.brick.x, this.brick.y );
+
+        if ( this.brick.x > this.brick.scene.areaLeft
+            && this.brick.x < this.brick.scene.areaRight
+            && this.brick.y > this.brick.scene.areaTop
+            && this.brick.y < this.brick.scene.areaBottom
+         ) {
+            this.atPlace();
+        } else {
+            this.fall();
+        }
+
+    }
+
     public startDragging() {
         this.brick.setInteractive();
 
@@ -96,7 +111,9 @@ export class MovementManager {
         // this.brick.inComposition = true;
         // this.brick.setIgnoreGravity( true );
         // this.brick.setStatic( true );
-        this.atPlace();
+        // this.atPlace();
+
+        this.placeInCompositionOrFall();
     }
 
     public shuffle() {

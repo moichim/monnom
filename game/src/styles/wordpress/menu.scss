@@ -20,4 +20,28 @@
     align-items: center;
     justify-content: space-between;
     height: 1rem;
+
+    nav {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 10px;
+    }
+}
+
+.monnom-header__link {
+    cursor: pointer;
+
+    border: 0;
+    background: transparent;
+    font-size: var( --wp--preset--font-size--medium );
+
+    outline: 0;
+    margin: 0;
+    padding: 0;
+
+    svg {
+        width: 1rem;
+        height: 1rem;
+    }
 }

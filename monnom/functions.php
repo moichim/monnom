@@ -8,6 +8,8 @@
  * @package monnom
  */
 
+require_once( "lib/options.php" );
+
 
 function is_monnom()
 {

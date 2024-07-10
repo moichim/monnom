@@ -70,6 +70,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       Phaser.Input.Events.POINTER_OUT,
       () => {
         this.scene.game.canvas.style.cursor = "default";
+        this.scene.area.setOff();
       }
     );
 
@@ -77,6 +78,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       Phaser.Input.Events.POINTER_DOWN,
       (context: Brick) => {
 
+        this.scene.area.setOn();
         this.movement.startDragging();
         this.scene.compositionChanged = true;
         this.scene.game.canvas.style.cursor = "pointer";
@@ -92,6 +94,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       (context: Brick) => {
         this.movement.endDragging();
         console.log( context );
+        this.scene.area.setOff();
       },
       this
     );

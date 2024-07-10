@@ -5,6 +5,7 @@ import { BrickManager } from "./BrickManager";
 import { CompositionManager } from "./CompositionManager";
 import { assetUrl } from "../../utils/assetUrl";
 import { setLoading } from "../../utils/loader";
+import { Area } from "../objects/Area";
 
 export class BricksScene extends Scene {
   camera!: Phaser.Cameras.Scene2D.Camera;
@@ -13,6 +14,14 @@ export class BricksScene extends Scene {
 
   bricks = new BrickManager(this);
   compositions = new CompositionManager(this);
+
+
+  area!: Area;
+
+  areaLeft!: number;
+  areaRight!: number;
+  areaTop!: number;
+  areaBottom!: number;
 
   protected _hasComposition = false;
   public get hasComposition() {
@@ -67,6 +76,25 @@ export class BricksScene extends Scene {
   };
 
   create() {
+
+    const canvasWidth = this.game.canvas.width;
+    const canvasHeight = this.game.canvas.height;
+
+    const areaOffsetTop = 70;
+    const areaOffsetBottom = canvasHeight * 1 / 3;
+    const areaOffsetVertical = 70;
+
+    const areaWidth = canvasWidth - ( areaOffsetVertical * 2 );
+    const areaHeight = canvasHeight - areaOffsetTop - areaOffsetBottom;
+
+    this.area = new Area( this, areaOffsetVertical, areaOffsetTop, areaWidth, areaHeight );
+
+    this.areaTop = areaOffsetTop;
+    this.areaBottom = areaOffsetTop + areaHeight;
+    this.areaLeft = areaOffsetVertical;
+    this.areaRight = areaOffsetVertical + areaWidth;
+
+    this.add.existing( this.area );
 
     setLoading( false );
 

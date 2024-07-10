@@ -28,8 +28,10 @@ interface IProps {
 
 export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
-  ( {}, ref) => {
+  ( props, ref) => {
     const game = useRef<Phaser.Game | null>(null);
+
+    console.log(props);
 
     const { width = window.innerWidth, height = window.innerHeight } = useWindowSize();
 

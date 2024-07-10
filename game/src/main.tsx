@@ -4,11 +4,17 @@ import { Site } from './components/Site.tsx'
 import './index.scss'
 import { isDev } from './utils/assetUrl.ts'
 import { prepareBody } from './utils/devTemplateLoad.ts'
-import { createDialog } from './utils/dialogs.ts'
+import { assignLink } from './utils/links.ts'
+import { createOffcanvas } from './utils/offcanvas.ts'
 
 const init = () => {
 
-  createDialog<HTMLDivElement>( "monnomContactTrigger", "monnomContactDialog" );
+  createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas" );
+
+  assignLink( "monnomPortfolioLink", "monnomPortfolio" );
+  assignLink( "monnomFacebookLink", "monnomFacebook" );
+  assignLink( "monnomInstagramLink", "monnomInstagram" );
+  assignLink( "monnomLinkedinLink", "monnomLinkedin" );
 
   ReactDOM.createRoot(document.getElementById('gameRoot')!).render(
     <React.StrictMode>
