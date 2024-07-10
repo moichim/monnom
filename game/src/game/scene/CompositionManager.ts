@@ -3,6 +3,7 @@ import { BricksScene } from "./BricksScene";
 import { Brick, BrickMovements } from "../objects/Brick";
 import Phaser from "phaser";
 import { v4 as uuid } from "uuid";
+import { apiUrl } from "../../utils/assetUrl";
 
 export type CompositionSnapshotType = ReturnType<CompositionManager["getCurrentSceneSnapshot"]>;
 
@@ -13,6 +14,15 @@ export class CompositionManager {
     protected readonly bricks = this.scene.bricks;
     protected dimensions!: ReturnType< CompositionManager["getSceneDimension"]>
 
+    protected _compositions: CompositionSnapshotType[] = [];
+    public get compositions() { return this._compositions; }
+    protected set compositions( data: CompositionSnapshotType[] ) {
+        this._compositions = data;
+        if ( this._compositions.length > 0 ) {
+            EventBus.emit( GameEvents.COMPS_RESTORED, this._compositions );
+        }
+    }
+
     constructor(
         protected readonly scene: BricksScene
     ) {
@@ -21,8 +31,19 @@ export class CompositionManager {
 
     protected readonly store: Map<string,CompositionSnapshotType> = new Map();
 
-    public init() {
+    public async init() {
         this.dimensions = this.getSceneDimension();
+        this.compositions = await this.getStoredCompositions();
+    }
+
+    public async getStoredCompositions() {
+        const result = await fetch( apiUrl( "/wp-json/monnom/v1/all" ) );
+        const json = await result.json() as {
+            message: string,
+            data: CompositionSnapshotType[]
+        };
+
+        return json.data;
     }
 
 
@@ -43,6 +64,17 @@ export class CompositionManager {
         this.store.set( snapshot.id, snapshot );
 
         EventBus.emit( GameEvents.COMP_STORED, snapshot );
+
+        fetch( apiUrl( "/wp-json/monnom/v1/store" ), {
+            method: "POST",
+            body: JSON.stringify( snapshot )
+        } )
+            .then( response => {
+                console.log(response);
+                return response.json();
+            })
+            .then( console.log )
+            .catch(console.log);
 
     }
 

@@ -1,5 +1,5 @@
 import { AUTO, Game } from "phaser";
-import { BricksScene as MainGame } from "./scene/BricksScene";
+import { BricksScene } from "./scene/BricksScene";
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -12,13 +12,13 @@ const baseConfig: Phaser.Types.Core.GameConfig = {
   physics: {
     default: "matter",
     matter: {
-      // debug: true,
+      debug: import.meta.env.DEV,
     },
   },
   audio: {
     noAudio: true
   },
-  scene: [MainGame],
+  scene: [BricksScene],
 };
 
 const StartGame = (parent: string) => {

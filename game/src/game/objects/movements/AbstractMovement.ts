@@ -36,6 +36,7 @@ export abstract class AbstractMovement {
 
     public stop() {
         this.isEnded = false;
+        this.brick.inComposition = true;
         this.onStop();
     }
 

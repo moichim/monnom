@@ -1,0 +1,33 @@
+
+
+.monnom-dialog {
+
+    border: none;
+    max-width: 400px;
+    inset: 0;
+    z-index: 999;
+    transition: opacity .3s ease-in-out;
+    animation: var(--animation-scale-down) forwards;
+    animation-timing-function: var(--ease-squish-3);
+    position: relative;
+    right: 1rem;
+    width: 100vw;
+
+    &[open] {
+        animation: var(--animation-slide-in-up) forwards;
+    }
+
+    &:not([open]) {
+        opacity: 0;
+    }
+
+    &::backdrop {
+        // backdrop-filter: blur(0.25rem);
+    }
+}
+
+.monnom-dialog__close {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}

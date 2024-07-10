@@ -5,5 +5,8 @@ import { Events } from 'phaser';
 export const EventBus = new Events.EventEmitter();
 
 export enum GameEvents {
-    COMP_STORED = "composition-stored"
+    COMP_STORED = "composition-stored",
+    HAS_COMPOSITION = "has-composition",
+    COMPS_RESTORED = "compositions-restored",
+    COMP_CHANGED = "composition-changed"
 }

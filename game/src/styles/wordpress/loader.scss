@@ -1,0 +1,24 @@
+.monnom-loader {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    // background: yellow;
+    top: -100vh;
+    left: 0;
+    opacity: .8;
+
+    transition: opacity .3ms ease-in-out;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.monnom-loader__loading {
+    opacity: 1;
+}
+
+.monnom-loader__inPlace {
+    top: 0;
+    // background: green;
+}

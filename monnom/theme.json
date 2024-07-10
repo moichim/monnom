@@ -2,6 +2,13 @@
 	"$schema": "https://schemas.wp.org/wp/6.5/theme.json",
 	"customTemplates": [
 		{
+			"name": "game",
+			"postTypes": [
+				"page"
+			],
+			"title": "Page with game"
+		},
+		{
 			"name": "page-no-title",
 			"postTypes": [
 				"page"

@@ -1,0 +1,93 @@
+
+:root {
+    --offcanvas-width: 100%;
+    --offcanvas-height: 100vh;
+    --offcanvas-backdrop-width: 0;
+}
+.monnom-offcanvas {
+
+    position: fixed;
+
+    --offcanvas-width: 100%;
+
+    z-index: 1000;
+
+    top: 0;
+    right: calc( var( --offcanvas-width ) * -1 );
+    // overflow: hidden;
+    height: 100vh;
+    transition: all .3s ease-in-out;
+
+    
+
+    @media ( min-width: 600px ) {
+
+        --offcanvas-width: 400px; 
+    }
+    
+
+}
+
+.monnom-offcanvas__content {
+
+    transition: all .3s ease-in-out;
+
+    width: var( --offcanvas-width );
+    right: calc( var( --offcanvas-width ) * -1 );
+    height: var( --offcanvas-height );
+
+    box-sizing: border-box;
+    padding: 1rem;
+
+
+    background: green;
+    position: absolute;
+    top: 0;
+}
+
+.monnom-offcanvas__backdrop {
+    width: var( --offcanvas-backdrop-width );
+    height: 100vh;
+    right: 0;
+    top: 0;
+    position: absolute;
+}
+
+
+.monnom-offcanvas__content__header {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+
+    h2 {
+        margin: 0;
+        padding: 0;
+    }
+
+
+    button {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        
+        background: 0;
+        cursor: pointer;
+    }
+
+}
+
+.monnom-offcanvas__open {
+
+    right: 0;
+    width: 100vw;
+
+    --offcanvas-backdrop-width: 100vw;
+
+    .monnom-offcanvas__content {
+        right: 0;
+    }
+
+
+}
+

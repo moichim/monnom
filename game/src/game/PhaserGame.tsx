@@ -7,11 +7,12 @@ import {
   useRef,
   useState,
 } from "react";
-import StartGame from "./StartGame";
+import { useWindowSize } from "usehooks-ts";
 import { EventBus } from "./EventBus";
 import { BricksScene } from "./scene/BricksScene";
-import { useWindowSize } from "usehooks-ts";
+import StartGame from "./StartGame";
 
+import { setLoading } from "../utils/loader";
 import style from "./PhaserGame.module.css";
 
 
@@ -39,6 +40,8 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
       destroyScene();
 
+      // setLoading( false );
+
       // if ( game.current !== null ) {
       game.current = StartGame("gameContainer");
       if (typeof ref === "function") {
@@ -50,8 +53,10 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
     }, [game, ref, width, height]);
 
     const destroyScene = () => {
+      setLoading( true );
 
       if (game.current) {
+        
         game.current.scene.sleep("Game");
         game.current.destroy(true);
       }
@@ -106,7 +111,6 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
         EventBus.removeListener("current-scene-ready");
       };
     }, []);
-
 
     return (
       <div

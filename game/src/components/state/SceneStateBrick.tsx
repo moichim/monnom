@@ -18,7 +18,7 @@ export const SceneStateBrick: React.FC<SceneStateBrickProps> = (props) => {
 
   return (
     <g
-        transform={` translate( ${x} ${y} ) `}
+        // transform={` translate( ${x} ${y} ) `}
         // x={props.position.absolute.x}
         // y={props.position.absolute.y}
         style={{
@@ -30,6 +30,7 @@ export const SceneStateBrick: React.FC<SceneStateBrickProps> = (props) => {
         // x={props.position.absolute.x}
         // y={props.position.absolute.y}
         transform={` 
+          translate( ${x} ${y} )
         scale( ${props.scale} ${props.scale} ) 
         rotate( ${props.angle} ${props.position.absolute.x / 2} ${
           props.position.absolute.y / 2

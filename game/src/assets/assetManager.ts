@@ -1,4 +1,5 @@
 import { BricksScene } from "../game/scene/BricksScene";
+import { assetUrl } from "../utils/assetUrl";
 
 type AssetDefinition = {
     url: string,
@@ -7,17 +8,13 @@ type AssetDefinition = {
 
 const defs = new Map<string,AssetDefinition>();
 
-const isLocal = window.location.href.includes( "localhost:5173" );
-
-const urlPrefix = isLocal ? "" : "/wp-content/themes/monnom/game/";
-
 const register = (
     key: string,
     url: string
 ) => {
     defs.set( key, { 
         key, 
-        url: urlPrefix + url 
+        url: assetUrl( url )
     } );
 }
 

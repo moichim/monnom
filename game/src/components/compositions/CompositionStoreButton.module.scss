@@ -1,0 +1,29 @@
+.composition_close {
+
+    position: fixed;
+    right: -2rem;
+    top: calc( 50%  - 1rem);
+    width: 2rem;
+
+    transition: right .3s ease-in-out, color .3s ease-in-out;
+
+    cursor: pointer;
+
+    color: black;
+
+    &[data-on="true"] {
+        right: 1rem;
+    }
+
+    &:hover {
+        color: red;
+    }
+}
+
+.monnom-composition__close__on {
+    
+}
+
+.monnom-composition__close__off {
+    
+}

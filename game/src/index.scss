@@ -1,0 +1,28 @@
+:root {
+
+  color-scheme: light dark;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body.monnom {
+
+}
+
+body {
+	color: var(--wp--preset--color--contrast);
+	font-family: var(--wp--preset--font-family--body);
+	font-size: var(--wp--preset--font-size--medium);
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1.55;
+	--wp--style--root--padding-top: 0px;
+	--wp--style--root--padding-right: var(--wp--preset--spacing--50);
+	--wp--style--root--padding-bottom: 0px;
+	--wp--style--root--padding-left: var(--wp--preset--spacing--50);
+}
+
+@import "./styles/index.scss"

@@ -10,7 +10,7 @@ import { SceneState } from "./SceneState";
 
 type CompositionPopoverProps = {
   compositions: CompositionSnapshotType[];
-  restore: (composition: CompositionSnapshotType) => void;
+  restore: (composition: CompositionSnapshotType) => void
 };
 
 export const CompositionPopover: React.FC<CompositionPopoverProps> = (
@@ -20,8 +20,6 @@ export const CompositionPopover: React.FC<CompositionPopoverProps> = (
   const { width = 0, height = 0 } = useWindowSize();
 
   const filtered = useMemo(() => {
-
-    console.log(width, height);
 
     return props.compositions.filter(composition => {
       console.log(composition.dimension.composition);

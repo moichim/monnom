@@ -1,8 +1,10 @@
 import Phaser, { Scene } from "phaser";
 import { AssetManager } from "../../assets/assetManager";
-import { EventBus } from "../EventBus";
+import { EventBus, GameEvents } from "../EventBus";
 import { BrickManager } from "./BrickManager";
 import { CompositionManager } from "./CompositionManager";
+import { assetUrl } from "../../utils/assetUrl";
+import { setLoading } from "../../utils/loader";
 
 export class BricksScene extends Scene {
   camera!: Phaser.Cameras.Scene2D.Camera;
@@ -11,6 +13,38 @@ export class BricksScene extends Scene {
 
   bricks = new BrickManager(this);
   compositions = new CompositionManager(this);
+
+  protected _hasComposition = false;
+  public get hasComposition() {
+    return this._hasComposition;
+  }
+  protected set hasComposition( value: boolean ) {
+    this._hasComposition = value;
+    EventBus.emit( GameEvents.HAS_COMPOSITION, value )
+  }
+
+
+  protected _compositionChanged = false;
+  public get compositionChanged() {
+    return this._compositionChanged;
+  }
+
+  public set compositionChanged( value: boolean ) {
+    if ( value !== this._compositionChanged ) {
+      this._compositionChanged = value;
+      EventBus.emit( GameEvents.COMP_CHANGED, value );
+    }
+  }
+
+  recalculateCompositionState() {
+    const anyBrickinComposition = this.bricks.all.find( brick => brick.inComposition );
+
+    if ( anyBrickinComposition && ! this._hasComposition) {
+      this.hasComposition = true;
+    } else if (!anyBrickinComposition && this._hasComposition) {
+      this.hasComposition = false;
+    }
+  }
 
   constructor() {
     super("Game");
@@ -21,12 +55,8 @@ export class BricksScene extends Scene {
     this.compositions.init();
     this.matter.world.setBounds();
 
-    const isLocal = window.location.href.includes("localhost:5173");
-
-    const urlPrefix = isLocal ? "" : "/wp-content/themes/monnom/game/";
-
     // Load body shapes
-    this.load.json("shapes", urlPrefix + "assets/bricks/shapes.json");
+    this.load.json("shapes", assetUrl( "assets/bricks/shapes.json") );
 
 
   }
@@ -37,6 +67,8 @@ export class BricksScene extends Scene {
   };
 
   create() {
+
+    setLoading( false );
 
     const shapes = this.cache.json.get("shapes");
     this.shapes = shapes;
@@ -95,8 +127,6 @@ export class BricksScene extends Scene {
     sum.width = sum.width / sum.count;
     sum.height = sum.height / sum.count;
 
-    console.log(sum);
-
     let cursorX = sum.width;
     let cursorY = this.game.canvas.height - sum.height;
 
@@ -131,6 +161,7 @@ export class BricksScene extends Scene {
 
   fall() {
     this.bricks.all.forEach((brick) => brick.fall());
+    this.compositionChanged = false;
   }
 
   changeScene() {

@@ -11,6 +11,7 @@ export enum BrickMovements {
 
 export class Brick extends Phaser.Physics.Matter.Sprite {
 
+  declare public scene: BricksScene;
 
   protected _inComposition = false;
   public get inComposition() {
@@ -18,6 +19,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
   }
   public set inComposition(value: boolean) {
     this._inComposition = value;
+    this.scene.recalculateCompositionState();
   }
 
 
@@ -76,6 +78,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       (context: Brick) => {
 
         this.movement.startDragging();
+        this.scene.compositionChanged = true;
         this.scene.game.canvas.style.cursor = "pointer";
 
         console.log( this.movement, context );
@@ -118,6 +121,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
   fall() {
     this.movement.fall();
+    this.inComposition = false;
   }
 
   public preUpdate(
