@@ -20,6 +20,39 @@
     }
 }
 
+.composition_close__wrapper {
+    padding: 0 1rem;
+
+    textarea, input, button {
+        box-sizing: border-box;
+        width: 100%;
+        padding: .5rem;
+        display: block;
+        margin: 0;
+        margin-bottom: .5rem;
+        border: 0;
+    }
+
+    button {
+        border: 0;
+        color: white;
+        background: black;
+        cursor: pointer;
+
+        &:hover,
+            &:focus {
+                background: green;
+            }
+
+    }
+
+    button[disabled] {
+        background: gray !important;
+        cursor: not-allowed;
+    } 
+
+}
+
 .monnom-composition__close__on {
     
 }

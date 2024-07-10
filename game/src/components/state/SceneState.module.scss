@@ -1,0 +1,22 @@
+.state__button {
+    width: 100%;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    display: inline-block;
+    background: transparent;
+
+    padding-bottom: 1rem;
+    cursor: pointer;
+
+    svg {
+        background: #f3f3f0;
+        transition: background-color .3s ease-in-out;
+    }
+
+    &:hover {
+        svg {
+            background: #fcfcfc;
+        }
+    }
+}

@@ -13,7 +13,6 @@ export const useController = () => {
         EventBus.on(
             GameEvents.COMP_STORED,
             (composition: CompositionSnapshotType) => {
-                console.log(composition);
                 setCompositions([composition, ...compositions]);
             }
         );

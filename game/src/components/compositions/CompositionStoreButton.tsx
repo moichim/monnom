@@ -1,10 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import styles from "./CompositionStoreButton.module.scss";
-import { Offcanvas, useOffcanvas } from "./ui/offcanvas";
+import { Offcanvas, useOffcanvas } from "../ui/offcanvas";
 
 type CompositionClearButtonProps = {
-    fn: (name: string) => void,
+    fn: (name: string, person: string) => void,
     on: boolean
+}
+
+const stringIsNotNull = (value: string | undefined | null) => {
+    if (!value) {
+        return false;
+    }
+    return value.length > 0 && value !== "";
 }
 
 export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = props => {
@@ -12,28 +19,17 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
     const offcanvas = useOffcanvas();
 
     const [message, setMessage] = useState<string>();
+    const [person, setPerson] = useState<string>();
 
     const disabled = useMemo(() => {
 
-        if (message === undefined) {
-            return true;
-        }
+        return !(stringIsNotNull(message) && stringIsNotNull(person));
 
-        else if (message.length === 0) {
-            return true;
-        }
+    }, [message, person]);
 
-        else if (message === "") {
-            return true;
-        }
-
-        return false;
-
-    }, [message]);
-
-    useEffect( () => {
-        setMessage( undefined );
-    }, [offcanvas.isOpen, setMessage] );
+    useEffect(() => {
+        setMessage(undefined);
+    }, [offcanvas.isOpen, setMessage]);
 
     return <>
         <div className={styles.composition_close} data-on={props.on} onClick={() => {
@@ -43,22 +39,35 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
                 <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
             </svg>
         </div>
-        <Offcanvas label="Uložit kompozici" control={offcanvas}>
+        <Offcanvas label="Save your composition!" control={offcanvas}>
 
-            <div>Uložit kompozici?</div>
+            <div className={styles.composition_close__wrapper}>
 
-            <textarea onChange={event => setMessage(event.target.value)}></textarea>
+                <div>Send us your creation and share it with other visitors of our site!</div>
 
-            <div>{message}</div>
+                <textarea 
+                    onChange={event => setMessage(event.target.value)}
+                    placeholder="Your message"
+                    value={message}
+                ></textarea>
 
-            <button onClick={() => {
-                if (message) {
-                    offcanvas.close();
-                    props.fn(message);
-                }
-            }}
-                disabled={disabled}
-            >Uložit</button>
+                <input 
+                    onChange={event => setPerson(event.target.value)}
+                    placeholder="Your nickname"
+                    value={person}
+                ></input>
+
+                <button onClick={() => {
+                    if (message && person) {
+                        offcanvas.close();
+                        props.fn(message, person);
+                        console.log(message, person);
+                    }
+                }}
+                    disabled={disabled}
+                >Uložit</button>
+
+            </div>
 
         </Offcanvas>
     </>

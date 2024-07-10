@@ -18,7 +18,7 @@ export class BricksScene extends Scene {
   public get hasComposition() {
     return this._hasComposition;
   }
-  protected set hasComposition( value: boolean ) {
+  public set hasComposition( value: boolean ) {
     this._hasComposition = value;
     EventBus.emit( GameEvents.HAS_COMPOSITION, value )
   }
@@ -162,6 +162,7 @@ export class BricksScene extends Scene {
   fall() {
     this.bricks.all.forEach((brick) => brick.fall());
     this.compositionChanged = false;
+    this.hasComposition = false;
   }
 
   changeScene() {

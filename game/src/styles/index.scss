@@ -9,6 +9,8 @@ body {
 @import "https://unpkg.com/open-props";
 @import "https://unpkg.com/open-props/media.min.css";
 
+@import 'use-scroll-shadow/lib/index.css'; // don't forget import css
+
 @import "./wordpress/loader.scss";
 @import "./wordpress/menu.scss";
 @import "./wordpress/dialog.scss";

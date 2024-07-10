@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import React, { PropsWithChildren, useCallback, useState } from "react";
+import React, { PropsWithChildren, RefObject, useCallback, useState } from "react";
+import { useScrollShadow } from "use-scroll-shadow";
 
 export const useOffcanvas = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -30,6 +31,8 @@ export const Offcanvas: React.FC<OffcanvasProps> = props => {
 
     const classes = classNames("monnom-offcanvas", props.control.isOpen ? "monnom-offcanvas__open" : "monnom-offcanvas__close");
 
+    const { elementRef, wrapperRef } = useScrollShadow();
+
     return <>
         <div className={classes}>
 
@@ -41,9 +44,12 @@ export const Offcanvas: React.FC<OffcanvasProps> = props => {
                     <button onClick={props.control.close}>X</button>
                 </header>
 
-                <div>
-                    {props.children}
-                </div>
+                <main className="monnom-offcanvas__content__scroller" ref={wrapperRef}>
+
+                    <div ref={elementRef as RefObject<HTMLDivElement>} style={{ overflowY: 'auto', maxHeight: 'calc( 100% - 4rem )' }}>
+                        {props.children}
+                    </div>
+                </main>
             </article>
 
         </div>

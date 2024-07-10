@@ -24,6 +24,28 @@
 
         --offcanvas-width: 400px; 
     }
+
+    .scroll-shadow-box::before {
+        opacity: var(--shadow-top-opacity);
+        background: linear-gradient(180deg, rgba(235, 233, 219, 1), transparent);
+        top: 0;
+    }
+
+    .scroll-shadow-box::after {
+        opacity: var(--shadow-bottom-opacity);
+        background: linear-gradient(0deg, rgba(235, 233, 219, 1), transparent);
+        bottom: 0;
+    }
+
+    .scroll-shadow-box::before, .scroll-shadow-box::after {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 2rem;
+        z-index: 1;
+        left: 0;
+        transition: .3s;
+    }
     
 
 }
@@ -37,10 +59,10 @@
     height: var( --offcanvas-height );
 
     box-sizing: border-box;
-    padding: 1rem;
+    // padding: 1rem;
 
 
-    background: green;
+    background: rgb(235, 233, 219);
     position: absolute;
     top: 0;
 }
@@ -55,8 +77,12 @@
 
 
 .monnom-offcanvas__content__header {
+
+    box-sizing: border-box;
+    padding: 1rem;
     display: flex;
     width: 100%;
+    height: 4rem;
     justify-content: space-between;
     align-items: center;
 
@@ -75,6 +101,10 @@
         cursor: pointer;
     }
 
+}
+
+.monnom-offcanvas__content__scroller {
+    height: calc( 100% - 2rem );
 }
 
 .monnom-offcanvas__open {

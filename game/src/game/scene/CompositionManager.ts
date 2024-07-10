@@ -48,7 +48,8 @@ export class CompositionManager {
 
 
     storeCurrentComposition(
-        name: string
+        name: string,
+        person: string
     ) {
 
         const bricks = this.bricks.currentlyInComposition;
@@ -60,6 +61,7 @@ export class CompositionManager {
 
         const snapshot = this.getCurrentSceneSnapshot();
         snapshot.name = name;
+        snapshot.person = person;
 
         this.store.set( snapshot.id, snapshot );
 
@@ -132,7 +134,9 @@ export class CompositionManager {
                 bounds,
             },
             id: uuid(),
-            name: undefined as unknown as string
+            name: undefined as unknown as string,
+            timestamp: (new Date).getTime(),
+            person: undefined as unknown as string
         }
     }
 

@@ -1,24 +1,22 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { EventBus, GameEvents } from "../game/EventBus";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { EventBus } from "../game/EventBus";
 import { BrickMovements } from "../game/objects/Brick";
-import { CompositionSnapshotType } from "../game/scene/CompositionManager";
 import { IRefPhaserGame, PhaserGame } from "../game/PhaserGame";
 import { BricksScene } from "../game/scene/BricksScene";
+import { CompositionSnapshotType } from "../game/scene/CompositionManager";
 import { MovementRadio } from "./movement/movementRadio";
-import { CompositionPopover } from "./state/CompositionsPopover";
-import React from "react";
 
-import styles from "./Controller.module.css"
 import { createPortal } from "react-dom";
 import { CompositionClearButton } from "./compositions/CompositionClearButton";
-import { Offcanvas, useOffcanvas } from "./compositions/ui/offcanvas";
-import { CompositionStore } from "./state/CompositionsStore";
 import { CompositionStoreButton } from "./compositions/CompositionStoreButton";
+import styles from "./Controller.module.css";
+import { CompositionStore } from "./state/CompositionsStore";
+import { Offcanvas, useOffcanvas } from "./ui/offcanvas";
 import { useController } from "./useController";
 
 export const Controller: React.FC = () => {
   const [movement, setMovement] = useState<BrickMovements>(
-    BrickMovements.NATURAL
+    BrickMovements.SWAP
   );
 
 
@@ -30,11 +28,6 @@ export const Controller: React.FC = () => {
 
   // Reference to the scene
   const [scene, setScene] = useState<BricksScene | undefined>();
-
-  // Stored compositions array
-  const [compositions, setCompositions] = useState<CompositionSnapshotType[]>(
-    []
-  );
 
   // Store the scene when ready
   useEffect(() => {
@@ -48,35 +41,7 @@ export const Controller: React.FC = () => {
     };
   }, [phaserRef, setScene]);
 
-  // Store the composition when ready
-  useEffect(() => {
-    EventBus.on(
-      GameEvents.COMP_STORED,
-      (composition: CompositionSnapshotType) => {
-        console.log(composition);
-        setCompositions([composition, ...compositions ]);
-      }
-    );
-
-    return () => {
-      EventBus.removeListener(GameEvents.COMP_STORED);
-    };
-  }, [compositions, setCompositions]);
-
-
-  // Listen to load of compositions
-  useEffect(() => {
-    EventBus.on(
-      GameEvents.COMPS_RESTORED,
-      (comps: CompositionSnapshotType[]) => {
-        setCompositions(comps);
-      }
-    );
-
-    return () => {
-      EventBus.removeListener(GameEvents.COMP_STORED);
-    };
-  }, [compositions, setCompositions]);
+  
 
   const restore = (composition: CompositionSnapshotType) => {
     if (scene) {
@@ -90,9 +55,9 @@ export const Controller: React.FC = () => {
     }
   };
 
-  const store = ( name: string ) => {
+  const store = ( name: string, person: string ) => {
     if (scene) {
-      scene.compositions.storeCurrentComposition(name);
+      scene.compositions.storeCurrentComposition(name, person);
     }
   };
 
@@ -109,29 +74,6 @@ export const Controller: React.FC = () => {
   }, [] );
 
 
-  const [hasComposition, setHasComposition] = useState<boolean>( false );
-
-    // Reflect has composition
-    useEffect( () => {
-
-      EventBus.on( GameEvents.HAS_COMPOSITION, ( value: boolean ) => {
-        setHasComposition( value );
-      } );
-
-    }, [] );
-
-    const [compositionChanged, setCompositionChanged] = useState<boolean>( false );
-
-    // Reflect has composition
-    useEffect( () => {
-
-      EventBus.on( GameEvents.COMP_CHANGED, ( value: boolean ) => {
-        setCompositionChanged( value );
-      } );
-
-    }, [] );
-
-
 
     const compositionsOffcanvas = useOffcanvas();
 
@@ -140,37 +82,30 @@ export const Controller: React.FC = () => {
       <PhaserGame ref={phaserRef} />
 
       {createPortal( <>
-        <button onClick={ compositionsOffcanvas.open }>Offcanvas</button>
-      <header>
-        <div>
-          <button onClick={fall}>Fall</button>
-          <button onClick={shuffle}>Shuffle</button>
-          
-          <CompositionPopover compositions={compositions} restore={restore} />
-        </div>
-        <div>
-          <MovementRadio
+        <button onClick={ compositionsOffcanvas.open }>Uložené kompozice</button>
+        <button onClick={shuffle}>Shuffle</button>
+        <MovementRadio
             value={movement}
             onChange={(key) => {
               setMovement(key as BrickMovements);
             }}
           />
-        </div>
-      </header>
       </>,
       menuRef
 
       )}
 
-      <CompositionClearButton fn={fall} on={hasComposition && compositionChanged}/>
+      <CompositionClearButton fn={fall} on={controller.hasComposition && controller.compositionChanged}/>
 
-      <CompositionStoreButton fn={( message: string ) => {
-        store( message );
+      <CompositionStoreButton fn={( message: string, person: string ) => {
+        store( message, person );
         compositionsOffcanvas.open();
-      }} on={hasComposition}/>
+      }} on={controller.hasComposition}/>
 
       <Offcanvas label={"Jsem"} control={compositionsOffcanvas}>
-        <CompositionStore compositions={compositions} restore={restore} onRestore={compositionsOffcanvas.close} />
+        <div style={{overflow: "scroll", height: "100%"}}>
+        <CompositionStore compositions={controller.compositions} restore={restore} onRestore={compositionsOffcanvas.close} />
+        </div>
       </Offcanvas>
 
 
