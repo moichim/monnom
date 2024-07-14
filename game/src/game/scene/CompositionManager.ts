@@ -171,6 +171,9 @@ export class CompositionManager {
 
     public restoreSnapshot( snapshot: CompositionSnapshotType, mode: BrickMovements ) {
 
+        this.scene.compositionChanged = false;
+        this.scene.hasComposition = true
+
         // Do nothing if snapshot does not exist
 
         // All bricks should fall

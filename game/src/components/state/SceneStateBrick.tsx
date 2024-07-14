@@ -12,35 +12,68 @@ export const SceneStateBrick: React.FC<SceneStateBrickProps> = (props) => {
     [props.textureKey]
   );
 
-  const x = useMemo( () => { return props.position.relative.x + props.center.x }, [props.position.relative] );
 
-  const y = useMemo( () => { return props.position.relative.y + props.center.y }, [props.position.relative] );
+  console.log( "shiftX", ( ( props.width / 2 ) * ( .5 - props.originX ) ) );
+  const x = useMemo( () => { 
+    return props.position.relative.x  
+    + props.center.x
+    - ( props.width * props.originX )
+  }, [props.position.relative] );
+
+  const y = useMemo( () => { 
+    return props.position.relative.y 
+    + props.center.y 
+    - ( props.height * props.originY )
+  }, [props.position.relative] );
+
+  const rotateCenterX = useMemo( () => {
+    return props.width * props.originX
+  }, [] );
+
+  const rotateCenterY = useMemo( () => {
+    return props.height * props.originY
+  }, [] );
+
+  console.log("render brick", props.originX, props.originY );
 
   return (
+
     <g
-        // transform={` translate( ${x} ${y} ) `}
-        // x={props.position.absolute.x}
-        // y={props.position.absolute.y}
-        style={{
-            transformOrigin: "center center"
-        }}
+      transform={`translate( ${x} ${y} ) `}
+      transform-origin={"center center"}
     >
       <image
         href={url}
         // x={props.position.absolute.x}
         // y={props.position.absolute.y}
+        /*
         transform={` 
-          translate( ${x} ${y} )
         scale( ${props.scale} ${props.scale} ) 
-        rotate( ${props.angle} ${props.position.absolute.x / 2} ${
-          props.position.absolute.y / 2
-        } ) `}
+        rotate( ${props.angle}, ${props.width}, ${props.height} ) `}
+        */
+       transform={`rotate( ${props.angle} ${rotateCenterX } ${rotateCenterY} )`}
+       stroke="black"
+       strokeWidth={4}
+       rotate={"300"}
+       scale={2}
         style={
           {
-            // transformOrigin: "center center"
+            // transformOrigin: "50% 50%",
+            stroke: "red",
+            fill: "green",
+            strokeWidth: "4"
+            // transform: "translate(200 200)"
+            /*
+            transform: `
+              scale( ${props.scale} ${props.scale} )
+              rotate( ${props.angle} )
+              translate( ${props.position.absolute.x} )
+            `
+            */
           }
         }
       />
-    </g>
+
+</g>
   );
 };

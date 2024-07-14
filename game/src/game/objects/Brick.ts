@@ -99,8 +99,6 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       this
     );
 
-    // this.setScale(0.2, 0.2);
-
   }
 
   placeOnPosition(
@@ -127,10 +125,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
     this.inComposition = false;
   }
 
-  public preUpdate(
-    // delta: number, 
-    // time: number
-  ) {
+  public preUpdate() {
     this.movement.update();
   }
 
@@ -142,6 +137,8 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
     const positionCenter = positionAbsolute.clone().subtract( relativeTo )
 
+    console.log( "Position center.", this );
+
     return {
       position: {
         absolute: positionAbsolute,
@@ -150,11 +147,12 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       textureKey: this.texture.key,
       name: this.name,
       angle: this.angle,
-      scale: this.scale
+      scale: this.scale,
+      width: this.width,
+      height: this.height,
+      originX: this.originX,
+      originY: this.originY
     }
   }
-
-
-
 
 }

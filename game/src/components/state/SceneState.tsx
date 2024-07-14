@@ -15,17 +15,17 @@ export const SceneState: React.FC<SceneStateProps> = ({
     // ...props
 }) => {
 
-    const width = useMemo( () => snapshot.dimension.scene.width, [] );
-    const height = useMemo( () => snapshot.dimension.scene.height, [] );
+    const width = useMemo( () => snapshot.dimension.composition.width + 400, [] );
+    const height = useMemo( () => snapshot.dimension.composition.height + 400, [] );
+
+    console.log( snapshot );
 
 
     return <button onClick={onClick} className={styles.state__button}>
 
         <svg
-            // width={width}
-            // height={height}
+        xmlns="http://www.w3.org/2000/svg"
             viewBox={`0 0 ${width} ${height}`}
-            preserveAspectRatio="xMidYMid meet"
         >
 
             {snapshot.bricks.map( brick => <SceneStateBrick key={brick.name} {...brick} center={ new Phaser.Math.Vector2( width / 2, height / 2 ) }/> )}
