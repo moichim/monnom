@@ -1,7 +1,7 @@
 .composition_close {
     position: fixed;
     left: -2rem;
-    top: calc( 50%  - 1rem);
+    top: calc(50% - 1rem);
     width: 2rem;
 
     cursor: pointer;
@@ -13,16 +13,46 @@
     &[data-on="true"] {
         left: 1rem;
     }
+}
 
-    &:hover {
-        color: red;
+$collapse-width: 600px;
+
+.label {
+    position: absolute;
+    padding: .5rem;
+    width: min-content;
+    white-space: nowrap;
+    left: 0;
+    top: 0;
+    color: black;
+
+    @media (max-width: $collapse-width ) {
+        transform-origin: 0, 0;
+        transform: rotate(-90deg);
+        left: -.8rem;
+        top: -50px;
+    }
+
+    @media (min-width: $collapse-width ) {
+        left: -330px;
+        top: -.5rem;
+        opacity: 0;
+        background: yellow;
+    }
+
+}
+
+.label__on {
+    
+    opacity: 1;
+    @media (min-width: $collapse-width ) {
+        left: 2.5rem;
     }
 }
 
-.monnom-composition__close__on {
-    
-}
-
-.monnom-composition__close__off {
-    
+.label__off {
+    @media (min-width: $collapse-width ) {
+        opacity: 0;
+        left: -330px;
+    }
 }

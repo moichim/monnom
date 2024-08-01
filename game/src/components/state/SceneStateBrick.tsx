@@ -12,8 +12,6 @@ export const SceneStateBrick: React.FC<SceneStateBrickProps> = (props) => {
     [props.textureKey]
   );
 
-
-  console.log( "shiftX", ( ( props.width / 2 ) * ( .5 - props.originX ) ) );
   const x = useMemo( () => { 
     return props.position.relative.x  
     + props.center.x
@@ -33,8 +31,6 @@ export const SceneStateBrick: React.FC<SceneStateBrickProps> = (props) => {
   const rotateCenterY = useMemo( () => {
     return props.height * props.originY
   }, [] );
-
-  console.log("render brick", props.originX, props.originY );
 
   return (
 

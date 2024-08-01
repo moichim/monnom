@@ -1,4 +1,4 @@
-import { Radio, RadioGroup } from "@headlessui/react"
+import { Button, Radio, RadioGroup } from "@headlessui/react"
 import { BrickMovements } from "../../game/objects/Brick"
 
 type MovementRadioProps = {
@@ -22,7 +22,7 @@ export const MovementRadio: React.FC<MovementRadioProps> = props => {
     >
         {Object.entries( BrickMovements ).map( ([key,label]) => {
 
-            return <Radio key={key} value={label} >{label}</Radio>
+            return <Radio key={key} value={label} as={Button}>{label}</Radio>
 
         } )}
     </RadioGroup>

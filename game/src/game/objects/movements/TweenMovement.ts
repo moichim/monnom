@@ -4,8 +4,6 @@ export class TweenMovement extends AbstractMovement {
 
     protected onStart(): void {
 
-      console.log( this );
-
       // this.brick.setIgnoreGravity( true );
       // this.brick.setCollidesWith( 99 )
 
@@ -17,7 +15,6 @@ export class TweenMovement extends AbstractMovement {
         ease: "linear",
         repeat: 0,
         duration: 1000,
-        // onUpdate: console.log,
         onComplete: () => {
           this.isAtPosition = true;
           this.isAtRotation = true;
@@ -33,8 +30,7 @@ export class TweenMovement extends AbstractMovement {
     }
 
     protected onEnd(): void {
-        console.log( "skončil jsem" );
-        this.movement.atPlace();
+        this.movement.atPlaceInComposition();
     }
 
     protected onUpdate(): void {

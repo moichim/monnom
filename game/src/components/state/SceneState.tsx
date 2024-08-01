@@ -3,6 +3,7 @@ import { CompositionSnapshotType } from "../../game/scene/CompositionManager";
 import { SceneStateBrick } from "./SceneStateBrick";
 
 import styles from "./SceneState.module.scss";
+import { format } from "date-fns";
 
 type SceneStateProps = {
     snapshot: CompositionSnapshotType,
@@ -18,9 +19,6 @@ export const SceneState: React.FC<SceneStateProps> = ({
     const width = useMemo( () => snapshot.dimension.composition.width + 400, [] );
     const height = useMemo( () => snapshot.dimension.composition.height + 400, [] );
 
-    console.log( snapshot );
-
-
     return <button onClick={onClick} className={styles.state__button}>
 
         <svg
@@ -33,7 +31,7 @@ export const SceneState: React.FC<SceneStateProps> = ({
         </svg>
 
         <h3>{snapshot.name}</h3>
-        <div>{snapshot.person} {snapshot.timestamp}</div>
+        <div>{snapshot.person} {format( snapshot.timestamp, "d. M. yyyy H:mm" ) }</div>
 
     </button>
 

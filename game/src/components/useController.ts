@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
 import { EventBus, GameEvents } from "../game/EventBus";
 import { CompositionSnapshotType } from "../game/scene/CompositionManager";
+import { CompositionState } from "../game/scene/BricksScene";
+import { useWindowSize } from "usehooks-ts";
 
 export const useController = () => {
 
 
     // Stored compositions array
     const [compositions, setCompositions] = useState<CompositionSnapshotType[]>([]);
+    const [state, setState] = useState<CompositionState>( CompositionState.NONE );
+
+    const { width = window.innerWidth, height = window.innerHeight } = useWindowSize();
+
+    useEffect(() => {
+
+        setState( CompositionState.NONE );
+      }, [width, height]);
 
     // Store the composition when ready
     useEffect(() => {
@@ -27,7 +37,7 @@ export const useController = () => {
     // Listen to load of compositions
     useEffect(() => {
         EventBus.on(
-            GameEvents.COMPS_RESTORED,
+            GameEvents.COMPS_LOADED,
             (comps: CompositionSnapshotType[]) => {
                 setCompositions(comps);
             }
@@ -40,32 +50,23 @@ export const useController = () => {
 
 
 
-    const [hasComposition, setHasComposition] = useState<boolean>(false);
+    
 
     // Reflect has composition
-    useEffect(() => {
+    useEffect( () => {
 
-        EventBus.on(GameEvents.HAS_COMPOSITION, (value: boolean) => {
-            setHasComposition(value);
-        });
+        EventBus.on(
+            GameEvents.COMP_STATE,
+            ( value: CompositionState ) => {
+                setState( value );
+            }
+        );
 
-    }, []);
-
-    const [compositionChanged, setCompositionChanged] = useState<boolean>(false);
-
-    // Reflect has composition
-    useEffect(() => {
-
-        EventBus.on(GameEvents.COMP_CHANGED, (value: boolean) => {
-            setCompositionChanged(value);
-        });
-
-    }, []);
+    }, [] );
 
     return {
-        hasComposition,
-        compositionChanged,
-        compositions
+        compositions,
+        state
     }
 
 

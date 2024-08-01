@@ -7,6 +7,7 @@ export const EventBus = new Events.EventEmitter();
 export enum GameEvents {
     COMP_STORED = "composition-stored",
     HAS_COMPOSITION = "has-composition",
-    COMPS_RESTORED = "compositions-restored",
-    COMP_CHANGED = "composition-changed"
+    COMPS_LOADED = "compositions-restored",
+    COMP_CHANGED = "composition-changed",
+    COMP_STATE = "composition-state"
 }

@@ -63,27 +63,29 @@ export class MovementManager {
             this._movement = undefined;
         }
 
+        this.brick.scene.checkIfThereAreBickInComposition();
+
         this.brick
             .setStatic( false )
             .setIgnoreGravity( false );
     }
 
-    public atPlace() {
+    public atPlaceInComposition() {
         this.brick.inComposition = true;
+        this.brick.scene.markAsHasComposition();
         this.brick.setIgnoreGravity( true );
         this.brick.setStatic( true );
         this._movement = undefined;
     }
 
     public placeInCompositionOrFall() {
-        console.log( this.brick.x, this.brick.y );
 
         if ( this.brick.x > this.brick.scene.areaLeft
             && this.brick.x < this.brick.scene.areaRight
             && this.brick.y > this.brick.scene.areaTop
             && this.brick.y < this.brick.scene.areaBottom
          ) {
-            this.atPlace();
+            this.atPlaceInComposition();
         } else {
             this.fall();
         }
@@ -92,8 +94,6 @@ export class MovementManager {
 
     public startDragging() {
         this.brick.setInteractive();
-
-        console.log( "startDragging" );
         this.brick.inComposition = false;
         this.brick.setStatic( false );
         this.brick.setIgnoreGravity( true );

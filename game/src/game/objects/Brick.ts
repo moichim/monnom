@@ -3,9 +3,9 @@ import { BricksScene } from "../scene/BricksScene";
 import { MovementManager } from "./movements/MovementManager";
 
 export enum BrickMovements {
-    NATURAL = "Natural",
-    // JUMP = "Jump",
-    SWAP = "Swap"
+  NATURAL = "Natural",
+  // JUMP = "Jump",
+  SWAP = "Swap"
 }
 
 
@@ -19,11 +19,21 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
   }
   public set inComposition(value: boolean) {
     this._inComposition = value;
-    this.scene.recalculateCompositionState();
+    this.scene.checkIfThereAreBickInComposition();
+  }
+
+  protected _isDragging = false;
+  public get isDragging() {
+    return this._isDragging;
+  }
+  protected set isDragging(value: boolean) {
+    this._isDragging = value;
   }
 
 
-  public readonly movement = new MovementManager( this );
+  protected fx?: Phaser.FX.Bloom;
+
+  public readonly movement = new MovementManager(this);
 
   constructor(
     name: string,
@@ -36,7 +46,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
   ) {
 
 
-    const shapes = scene.cache.json.get( "shapes" );
+    const shapes = scene.cache.json.get("shapes");
 
     const shape = shapes[texture] as Phaser.Types.Physics.Matter.MatterBodyConfig;
     shape.density = 1;
@@ -46,13 +56,13 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
     shape.frictionStatic = 0.5;
 
     super(
-      scene.matter.world, 
-      x, 
-      y, 
-      texture, 
-      frame, 
-      { 
-        ...options, 
+      scene.matter.world,
+      x,
+      y,
+      texture,
+      frame,
+      {
+        ...options,
         // chamfer: 16, 
         shape: shape as Phaser.Types.Physics.Matter.MatterSetBodyConfig
       });
@@ -60,9 +70,18 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
     this.name = name;
 
     this.on(
-      Phaser.Input.Events.POINTER_OVER,
-      () => {
-        this.scene.game.canvas.style.cursor = "pointer";
+      Phaser.Input.Events.POINTER_MOVE,
+      (event: MouseEvent) => {
+
+        const body = this.body as Phaser.Types.Physics.Matter.MatterBody;
+        const contains = this.scene.matter.containsPoint(body, event.x, event.y);
+        if (contains) {
+          this.scene.game.canvas.style.cursor = "pointer";
+        }
+        else {
+          this.scene.game.canvas.style.cursor = "default";
+
+        }
       }
     );
 
@@ -70,31 +89,33 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       Phaser.Input.Events.POINTER_OUT,
       () => {
         this.scene.game.canvas.style.cursor = "default";
-        this.scene.area.setOff();
       }
     );
 
     this.on(
       Phaser.Input.Events.POINTER_DOWN,
       (context: Brick) => {
-
+        context;
+        this.isDragging = true;
         this.scene.area.setOn();
         this.movement.startDragging();
-        this.scene.compositionChanged = true;
+        this.scene.startDragging();
+        this.scene.markAsCompositionChanged();
         this.scene.game.canvas.style.cursor = "pointer";
-
-        console.log( this.movement, context );
-    
       },
       this
     );
 
+
+
     this.on(
       Phaser.Input.Events.POINTER_UP,
       (context: Brick) => {
+        context;
+        this.isDragging = false;
         this.movement.endDragging();
-        console.log( context );
         this.scene.area.setOff();
+        this.scene.endDragging();
       },
       this
     );
@@ -106,8 +127,8 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
     y: number,
     angle: number
   ): this {
-    this.setPosition( x, y );
-    this.setAngle( angle );
+    this.setPosition(x, y);
+    this.setAngle(angle);
     return this;
   }
 
@@ -117,12 +138,11 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
     const rotation = Math.random() * 360;
     this.setRotation(rotation);
     this.setInteractive();
-    this.setBounce( 0 );
+    this.setBounce(0);
   }
 
   fall() {
     this.movement.fall();
-    this.inComposition = false;
   }
 
   public preUpdate() {
@@ -135,9 +155,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
     const positionAbsolute = new Phaser.Math.Vector2(this.x, this.y);
 
-    const positionCenter = positionAbsolute.clone().subtract( relativeTo )
-
-    console.log( "Position center.", this );
+    const positionCenter = positionAbsolute.clone().subtract(relativeTo)
 
     return {
       position: {

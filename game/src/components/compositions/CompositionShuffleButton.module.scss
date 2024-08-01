@@ -1,0 +1,66 @@
+$collapse-width: 600px;
+
+.composition_close {
+    position: fixed;
+    left: -2rem;
+    top: calc(50% + 1rem);
+    width: 2rem;
+
+    cursor: pointer;
+
+    color: black;
+
+    transition: left .3s ease-in-out, color .3s ease-in-out;
+
+    &[data-on="true"] {
+        left: 1rem;
+    }
+
+    @media (max-width: $collapse-width ) {
+
+        top: calc(50% - 8rem);
+
+    }
+}
+
+
+
+.label {
+    position: absolute;
+    padding: .5rem;
+    width: min-content;
+    white-space: nowrap;
+    left: 0;
+    top: 0;
+    color: black;
+
+    @media (max-width: $collapse-width ) {
+        transform-origin: 0, 0;
+        transform: rotate(-90deg);
+        left: -1.3rem;
+        top: -60px;
+    }
+
+    @media (min-width: $collapse-width ) {
+        left: -330px;
+        top: -.5rem;
+        opacity: 0;
+        background: yellow;
+    }
+
+}
+
+.label__on {
+    
+    opacity: 1;
+    @media (min-width: $collapse-width ) {
+        left: 2.5rem;
+    }
+}
+
+.label__off {
+    @media (min-width: $collapse-width ) {
+        opacity: 0;
+        left: -330px;
+    }
+}

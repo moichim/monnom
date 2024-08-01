@@ -29,9 +29,9 @@ interface IProps {
 export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
   ( props, ref) => {
-    const game = useRef<Phaser.Game | null>(null);
+    props;
 
-    console.log(props);
+    const game = useRef<Phaser.Game | null>(null);
 
     const { width = window.innerWidth, height = window.innerHeight } = useWindowSize();
 
@@ -96,9 +96,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
     // After the scene is initialised, set new properties
     useEffect(() => {
-      EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {
-        console.log("sceneStarted", scene_instance);
-
+      EventBus.on("current-scene-ready", () => {
         // Set this layout as ON
         setOn(true);
 

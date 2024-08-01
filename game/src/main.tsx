@@ -16,6 +16,12 @@ const init = () => {
   assignLink( "monnomInstagramLink", "monnomInstagram" );
   assignLink( "monnomLinkedinLink", "monnomLinkedin" );
 
+  const menu = document.getElementById("monnomHeader");
+
+  if ( menu ) {
+    setTimeout( () => menu.classList.add( "monnom-header__on" ), 500 );
+  }
+
   ReactDOM.createRoot(document.getElementById('gameRoot')!).render(
     <React.StrictMode>
       <Site />

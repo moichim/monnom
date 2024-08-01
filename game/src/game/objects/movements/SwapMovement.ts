@@ -4,8 +4,6 @@ export class SwapMovement extends AbstractMovement {
 
     protected onStart(): void {
 
-      console.log( this );
-
       // this.brick.setIgnoreGravity( true );
       // this.brick.setCollidesWith( 99 )
       // this.brick.alpha
@@ -23,7 +21,7 @@ export class SwapMovement extends AbstractMovement {
               this.brick.y = this.targetPosition.y + ( ( Math.random() * 50 ) - 25 );
               this.brick.angle = this.targetRotation;
               // this.brick.setScale( 1.2, 1.2 );
-              this.brick.movement.atPlace();
+              this.brick.movement.atPlaceInComposition();
             }
           },
           {
@@ -50,8 +48,7 @@ export class SwapMovement extends AbstractMovement {
     }
 
     protected onEnd(): void {
-        console.log( "skončil jsem" );
-        this.movement.atPlace();
+        this.movement.atPlaceInComposition();
     }
 
     protected onUpdate(): void {

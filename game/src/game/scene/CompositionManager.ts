@@ -15,11 +15,15 @@ export class CompositionManager {
     protected dimensions!: ReturnType< CompositionManager["getSceneDimension"]>
 
     protected _compositions: CompositionSnapshotType[] = [];
+
+    /** Get all the stored compositions loaded from the backend. */
     public get compositions() { return this._compositions; }
-    protected set compositions( data: CompositionSnapshotType[] ) {
+
+    /** Store the loaded compositions and emit them in an event */
+    protected storeCompositions( data: CompositionSnapshotType[] ) {
         this._compositions = data;
         if ( this._compositions.length > 0 ) {
-            EventBus.emit( GameEvents.COMPS_RESTORED, this._compositions );
+            EventBus.emit( GameEvents.COMPS_LOADED, this.compositions );
         }
     }
 
@@ -33,7 +37,8 @@ export class CompositionManager {
 
     public async init() {
         this.dimensions = this.getSceneDimension();
-        this.compositions = await this.getStoredCompositions();
+        // Load saved compositions from the API
+        this.storeCompositions( await this.getStoredCompositions() );
     }
 
     public async getStoredCompositions() {
@@ -72,7 +77,6 @@ export class CompositionManager {
             body: JSON.stringify( snapshot )
         } )
             .then( response => {
-                console.log(response);
                 return response.json();
             })
             .then( console.log )
@@ -82,10 +86,8 @@ export class CompositionManager {
 
 
     protected getCurrentSceneSnapshot() {
+
         const bricks = this.bricks.currentlyInComposition;
-
-
-
         const center = bricks.reduce( (
             state,
             current
@@ -171,8 +173,7 @@ export class CompositionManager {
 
     public restoreSnapshot( snapshot: CompositionSnapshotType, mode: BrickMovements ) {
 
-        this.scene.compositionChanged = false;
-        this.scene.hasComposition = true
+        this.scene.markAsCompNone();
 
         // Do nothing if snapshot does not exist
 

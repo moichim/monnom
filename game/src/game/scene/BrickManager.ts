@@ -54,4 +54,8 @@ export class BrickManager {
   /** Get array of all bricks */
   public get all() {return this.array;}
 
+  public get currentlyDraggin() {
+    return this.array.filter( brick => brick.isDragging );
+  }
+
 }

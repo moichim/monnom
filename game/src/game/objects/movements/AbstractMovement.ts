@@ -44,7 +44,7 @@ export abstract class AbstractMovement {
 
         if ( this.isAtPosition && this.isAtRotation ) {
             // this.stop();
-            this.movement.atPlace();
+            this.movement.atPlaceInComposition();
         } else if ( this.isStarted && !this.isEnded ) {
             this.onUpdate();
         }

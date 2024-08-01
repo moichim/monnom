@@ -1,6 +1,7 @@
+import classNames from "classnames";
 import React, { useEffect, useMemo, useState } from "react";
-import styles from "./CompositionStoreButton.module.scss";
 import { Offcanvas, useOffcanvas } from "../ui/offcanvas";
+import styles from "./CompositionStoreButton.module.scss";
 
 type CompositionClearButtonProps = {
     fn: (name: string, person: string) => void,
@@ -31,27 +32,42 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
         setMessage(undefined);
     }, [offcanvas.isOpen, setMessage]);
 
+    const [hover, setHover] = useState<boolean>(false);
+
     return <>
-        <div className={styles.composition_close} data-on={props.on} onClick={() => {
-            offcanvas.open();
-        }}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+        <div className={styles.composition_close} data-on={props.on} role="button" >
+            <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                strokeWidth={1.5} 
+                stroke="currentColor" 
+                className="size-6"
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)} onClick={() => {
+                    offcanvas.open();
+                    setHover(false);
+                }}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
             </svg>
+            <div className={classNames(hover ? styles.label__on : styles.label__off, styles.label)}>
+                Save your creation
+            </div>
         </div>
+
         <Offcanvas label="Save your composition!" control={offcanvas}>
 
             <div className={styles.composition_close__wrapper}>
 
                 <div>Send us your creation and share it with other visitors of our site!</div>
 
-                <textarea 
+                <textarea
                     onChange={event => setMessage(event.target.value)}
                     placeholder="Your message"
                     value={message}
                 ></textarea>
 
-                <input 
+                <input
                     onChange={event => setPerson(event.target.value)}
                     placeholder="Your nickname"
                     value={person}
@@ -61,7 +77,6 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
                     if (message && person) {
                         offcanvas.close();
                         props.fn(message, person);
-                        console.log(message, person);
                     }
                 }}
                     disabled={disabled}

@@ -7,6 +7,12 @@ import { assetUrl } from "../../utils/assetUrl";
 import { setLoading } from "../../utils/loader";
 import { Area } from "../objects/Area";
 
+export enum CompositionState {
+  NONE,
+  HAS,
+  CHANGED
+}
+
 export class BricksScene extends Scene {
   camera!: Phaser.Cameras.Scene2D.Camera;
   blockTexture!: Phaser.GameObjects.Image;
@@ -23,54 +29,80 @@ export class BricksScene extends Scene {
   areaTop!: number;
   areaBottom!: number;
 
-  protected _hasComposition = false;
-  public get hasComposition() {
-    return this._hasComposition;
-  }
-  public set hasComposition( value: boolean ) {
-    this._hasComposition = value;
-    EventBus.emit( GameEvents.HAS_COMPOSITION, value )
-  }
-
-
-  protected _compositionChanged = false;
-  public get compositionChanged() {
-    return this._compositionChanged;
-  }
-
-  public set compositionChanged( value: boolean ) {
-    if ( value !== this._compositionChanged ) {
-      this._compositionChanged = value;
-      EventBus.emit( GameEvents.COMP_CHANGED, value );
+  protected state: CompositionState = CompositionState.NONE;
+  public markAsHasComposition() {
+    if (this.state === CompositionState.NONE) {
+      this.state = CompositionState.HAS;
+      EventBus.emit(GameEvents.COMP_STATE, this.state);
     }
   }
 
-  recalculateCompositionState() {
-    const anyBrickinComposition = this.bricks.all.find( brick => brick.inComposition );
-
-    if ( anyBrickinComposition && ! this._hasComposition) {
-      this.hasComposition = true;
-    } else if (!anyBrickinComposition && this._hasComposition) {
-      this.hasComposition = false;
+  public markAsCompositionChanged() {
+    if (this.state !== CompositionState.CHANGED) {
+      this.state = CompositionState.CHANGED;
+      EventBus.emit(GameEvents.COMP_STATE, this.state);
     }
   }
+
+  public markAsCompNone() {
+    this.state = CompositionState.NONE;
+    EventBus.emit(GameEvents.COMP_STATE, this.state);
+  }
+
+  checkIfThereAreBickInComposition() {
+    const anyBrickinComposition = this.bricks.all.find(brick => brick.inComposition);
+    if (anyBrickinComposition) {
+      this.markAsHasComposition();
+    } else {
+      this.markAsCompNone();
+    }
+  }
+
+  public bg!: Phaser.GameObjects.Rectangle;
+  protected bgTween!: Phaser.Tweens.Tween;
+
+  public startDragging() {
+    this.bg.fillColor = 0xeeeeee;
+    if (this.bgTween) this.bgTween.stop();
+    this.bgTween = this.tweens.add({
+      targets: this.bg,
+      ease: "linear",
+      alpha: 1,
+      repeat: 0,
+      duration: 500
+    });
+  }
+
+  public endDragging() {
+    if (this.bgTween) this.bgTween.stop();
+    this.bgTween = this.tweens.add({
+      targets: this.bg,
+      ease: "linear",
+      alpha: 0,
+      repeat: 0,
+      duration: 500
+    });
+  }
+
+
 
   constructor() {
     super("Game");
   }
 
   preload() {
+
     AssetManager.registerToScene(this);
     this.compositions.init();
     this.matter.world.setBounds();
 
     // Load body shapes
-    this.load.json("shapes", assetUrl( "assets/bricks/shapes.json") );
+    this.load.json("shapes", assetUrl("assets/bricks/shapes.json"));
 
 
   }
 
-  /** Collection of shapes */
+  /** Collection of shapes defined in JSON */
   shapes!: {
     [index: string]: Phaser.Types.Physics.Matter.MatterBodyConfig
   };
@@ -80,23 +112,31 @@ export class BricksScene extends Scene {
     const canvasWidth = this.game.canvas.width;
     const canvasHeight = this.game.canvas.height;
 
+    this.bg = this.add.rectangle(canvasWidth / 2, canvasHeight / 2, canvasWidth, canvasHeight, 0xffffff, 1);
+
+    window.addEventListener( "mouseout", () => {
+      this.bricks.currentlyDraggin.map( brick => brick.fall() );
+      this.endDragging();
+    } );
+
+
     const areaOffsetTop = 70;
     const areaOffsetBottom = canvasHeight * 1 / 3;
     const areaOffsetVertical = 70;
 
-    const areaWidth = canvasWidth - ( areaOffsetVertical * 2 );
+    const areaWidth = canvasWidth - (areaOffsetVertical * 2);
     const areaHeight = canvasHeight - areaOffsetTop - areaOffsetBottom;
 
-    this.area = new Area( this, areaOffsetVertical, areaOffsetTop, areaWidth, areaHeight );
+    this.area = new Area(this, areaOffsetVertical, areaOffsetTop, areaWidth, areaHeight);
 
     this.areaTop = areaOffsetTop;
     this.areaBottom = areaOffsetTop + areaHeight;
     this.areaLeft = areaOffsetVertical;
     this.areaRight = areaOffsetVertical + areaWidth;
 
-    this.add.existing( this.area );
+    this.add.existing(this.area);
 
-    setLoading( false );
+    setLoading(false);
 
     const shapes = this.cache.json.get("shapes");
     this.shapes = shapes;
@@ -189,8 +229,7 @@ export class BricksScene extends Scene {
 
   fall() {
     this.bricks.all.forEach((brick) => brick.fall());
-    this.compositionChanged = false;
-    this.hasComposition = false;
+    this.markAsCompNone();
   }
 
   changeScene() {

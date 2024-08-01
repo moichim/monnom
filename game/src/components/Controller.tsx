@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { EventBus } from "../game/EventBus";
 import { BrickMovements } from "../game/objects/Brick";
 import { IRefPhaserGame, PhaserGame } from "../game/PhaserGame";
-import { BricksScene } from "../game/scene/BricksScene";
+import { BricksScene, CompositionState } from "../game/scene/BricksScene";
 import { CompositionSnapshotType } from "../game/scene/CompositionManager";
 import { MovementRadio } from "./movement/movementRadio";
 
@@ -32,7 +32,6 @@ export const Controller: React.FC = () => {
   // Store the scene when ready
   useEffect(() => {
     EventBus.on("current-scene-ready", (scene_instance: Phaser.Scene) => {
-      console.log("přišla scéna!", scene_instance);
       setScene(scene_instance as BricksScene);
     });
 
@@ -41,7 +40,7 @@ export const Controller: React.FC = () => {
     };
   }, [phaserRef, setScene]);
 
-  
+
 
   const restore = (composition: CompositionSnapshotType) => {
     if (scene) {
@@ -55,7 +54,7 @@ export const Controller: React.FC = () => {
     }
   };
 
-  const store = ( name: string, person: string ) => {
+  const store = (name: string, person: string) => {
     if (scene) {
       scene.compositions.storeCurrentComposition(name, person);
     }
@@ -67,50 +66,59 @@ export const Controller: React.FC = () => {
     }
   };
 
-  const menuRef = useMemo( () => {
+  const buttonRef = useMemo(() => {
+    return document.getElementById("monnomCompositionsLink")!;
+  }, []);
 
-    return document.getElementById( "monnomHeader_links" )!;
+  const menuRef = useMemo(() => {
+    return document.getElementById("monnomHeader_links")!;
+  }, []);
 
-  }, [] );
 
-
-
-    const compositionsOffcanvas = useOffcanvas();
+  const compositionsOffcanvas = useOffcanvas();
 
   return (
     <div className={styles.container}>
       <PhaserGame ref={phaserRef} />
 
-      {createPortal( <>
-        <button onClick={ compositionsOffcanvas.open } className="monnom-header__link">Uložené kompozice</button>
-        <button onClick={shuffle} className="monnom-header__link">Shuffle</button>
-        <MovementRadio
-            value={movement}
-            onChange={(key) => {
-              setMovement(key as BrickMovements);
-            }}
-          />
+      {createPortal(<>
+        <span onClick={compositionsOffcanvas.open} className="monnom-header__link">Uložené kompozice</span>
       </>,
-      menuRef
+        buttonRef
 
       )}
 
-      <CompositionClearButton fn={fall} on={controller.hasComposition && controller.compositionChanged}/>
+{createPortal(<>
+        <button onClick={shuffle} className="">Shuffle</button>
+        <MovementRadio
+          value={movement}
+          onChange={(key) => {
+            setMovement(key as BrickMovements);
+          }}
+        />
+      </>,
+        menuRef
 
-      <CompositionStoreButton fn={( message: string, person: string ) => {
-        store( message, person );
+      )}
+
+      {/*<CompositionShuffleButton fn={shuffle} on={true} /> */}
+
+      <CompositionClearButton fn={fall} on={controller.state === CompositionState.HAS || controller.state === CompositionState.CHANGED} />
+
+      <CompositionStoreButton fn={(message: string, person: string) => {
+        store(message, person);
         compositionsOffcanvas.open();
-      }} on={controller.hasComposition}/>
+      }} on={controller.state === CompositionState.CHANGED} />
 
-      <Offcanvas label={"Jsem"} control={compositionsOffcanvas}>
-        <div style={{overflow: "scroll", height: "100%"}}>
-        <CompositionStore compositions={controller.compositions} restore={restore} onRestore={compositionsOffcanvas.close} />
+      <Offcanvas label={"Visitors' creations"} control={compositionsOffcanvas}>
+        <div style={{ overflow: "scroll", height: "100%" }}>
+          <CompositionStore compositions={controller.compositions} restore={restore} onRestore={compositionsOffcanvas.close} />
         </div>
       </Offcanvas>
 
 
 
-      
+
     </div>
   );
 };

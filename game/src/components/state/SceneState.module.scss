@@ -10,13 +10,13 @@
     cursor: pointer;
 
     svg {
-        background: #f3f3f0;
+        // background: #f3f3f0;
         transition: background-color .3s ease-in-out;
     }
 
     &:hover {
         svg {
-            background: #fcfcfc;
+            background: rgb(255, 255, 177);
         }
     }
 }

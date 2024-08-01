@@ -16,7 +16,6 @@ export const CompositionStore: React.FC<CompositionStoreProps> = props => {
   const filtered = useMemo(() => {
 
     return props.compositions.filter(composition => {
-      console.log(composition.dimension.composition);
       return composition.dimension.composition.width < (width - 100)
         && composition.dimension.composition.height < (height - 200)
       // && composition.dimension.composition.width > ( width - 200 )
