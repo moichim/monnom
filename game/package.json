@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && mv ../monnom/game/template.html ../monnom/templates/game.html && cp ../monnom/templates/game.html ../monnom/templates/home.html && rm ../monnom/game/index.html && rm ../monnom/game/devStyles.css",
+    "build": "tsc -b && vite build && mv ../monnom/game/template.html ../monnom/templates/game.html && mv ../monnom/game/assets/monnom-logo.svg ../monnom/assets/monnom-logo.svg && cp ../monnom/templates/game.html ../monnom/templates/home.html && rm ../monnom/game/index.html && rm ../monnom/game/devStyles.css",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },

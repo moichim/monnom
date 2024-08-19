@@ -2,4 +2,37 @@
     transition: all .3s ease-in-out;
     overflow: hidden;
     position: relative;
+
+    padding: 0;
+
+    canvas {
+        transition: all .5s ease-in-out;
+        transform-origin: center 0;
+    }
+}
+
+.container_in {
+
+    button {
+        background:red;
+    }
+
+}
+
+.container_out {
+
+    background: lightgray;
+    overflow-y: scroll;
+
+    padding: 50px 0;
+
+    button {
+        background: green;
+    }
+
+    canvas {
+        object-fit: contain;
+        /** scale: .7; */
+    }
+
 }

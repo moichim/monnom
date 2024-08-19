@@ -32,6 +32,8 @@ const StartGame = (parent: string) => {
   const width = window.innerWidth;
   const height = totalArea / width;
 
+  console.log( width, height );
+
   const config = {
     ...baseConfig,
     width: width,

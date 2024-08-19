@@ -1,15 +1,15 @@
 .monnom-header {
 
-
+    font-family: var(--wp--preset--font-family--relaway);
 
 }
 
 .monnom-header {
-    position: fixed;
+    position: absolute;
     width: 100vw;
     height: 0;
     
-    z-index: 999;
+    z-index: 400;
 
     transition: all .5s ease-in-out;
     top: -20rem;
@@ -34,6 +34,7 @@
 $collapse: 900px;
 .monnom-header__links {
     position: relative;
+    flex-grow: 1;
 
     @media ( max-width: $collapse ) {
         position: absolute;
@@ -60,7 +61,9 @@ $collapse: 900px;
 
     border: 0;
     background: transparent;
+    font-family: var(--wp--preset--font-family--relaway);
     font-size: var( --wp--preset--font-size--medium );
+    color: var(--wp--preset--color--contrast);
     border-bottom: 0 !important;
 
     outline: 0;
@@ -75,7 +78,26 @@ $collapse: 900px;
     }
 }
 .monnom-header__logo {
-    position: relative;
+    position: absolute;
     left: 1rem;
     top: 1rem;
+    z-index: 9999 !important;
+    color: var(--wp--preset--color--contrast);
+    font-family: var(--wp--preset--font-family--relaway);
+
+    width: 3rem;
+
+    svg {
+        width: 3rem;
+        position: fixed;
+        z-index: 9999 !important;
+    }
+
+    @media ( min-width: 680px ) {
+        width: 3.5rem;
+    }
+
+    @media ( min-width: 1200px ) {
+        width: 4rem;
+    }
 }

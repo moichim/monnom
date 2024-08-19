@@ -50,7 +50,7 @@ export const Offcanvas: React.FC<OffcanvasProps> = props => {
             <article className="monnom-offcanvas__content">
                 <header className="monnom-offcanvas__content__header">
                     <h2>{props.label}</h2>
-                    <button onClick={props.control.close}>X</button>
+                    <button onClick={props.control.close}>×</button>
                 </header>
 
                 <main className="monnom-offcanvas__content__scroller">

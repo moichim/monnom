@@ -14,6 +14,8 @@ import StartGame from "./StartGame";
 
 import { setLoading } from "../utils/loader";
 import style from "./PhaserGame.module.css";
+import { Button } from "@headlessui/react";
+import classNames from "classnames";
 
 
 
@@ -42,16 +44,13 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
       destroyScene();
 
-      // setLoading( false );
-
-      // if ( game.current !== null ) {
       game.current = StartGame("gameContainer");
       if (typeof ref === "function") {
         ref({ game: game.current, scene: new BricksScene() });
       } else if (ref) {
         ref.current = { game: game.current, scene: new BricksScene() };
       }
-      // }
+
     }, [game, ref, width, height]);
 
     const destroyScene = () => {
@@ -66,11 +65,19 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
     useLayoutEffect(() => {
 
+      if ( game.current ) {
+        if ( game.current.canvas.height ) {
+          setScale( window.innerHeight / ( game.current.canvas.height + 100 ) );
+        }
+      }
+
       startScene();
 
       return () => destroyScene();
 
     }, [ref]);
+
+   
 
 
     // Whenever the window dimension changes, trigger the reload (if initialised already)
@@ -96,7 +103,9 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
     // After the scene is initialised, set new properties
     useEffect(() => {
+
       EventBus.on("current-scene-ready", () => {
+
         // Set this layout as ON
         setOn(true);
 
@@ -112,15 +121,33 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
       };
     }, []);
 
+    const [out, setOut] = useState<boolean>( false );
+    const [scale, setScale] = useState<number>( 1 );
+
+    useEffect( () => {
+
+      if (game.current) {
+        const sc = out === true
+          ? scale
+          : 1;
+        game.current.canvas.style.scale = sc.toString();
+      }
+
+    }, [scale, out, game] );
+
     return (
       <div
-        className={style.container}
+        className={classNames( style.container, out ? style.container_out : style.container_in )}
         style={{
           transform: `translateY( ${on ? 0 : "20vh"} )`,
           opacity: on ? 1 : 0,
           position: "relative",
         }}
       >
+        <Button 
+          style={{position: "fixed", left: 0, top: "5rem", zIndex: 999999}}
+          onClick={()=>{setOut(!out)}}
+        >Zoom out</Button>
         <div id="gameContainer"></div>
       </div>
     );

@@ -7,7 +7,7 @@
  *
  * @package monnom
  */
-
+require_once( "lib/tgmpa.php" );
 require_once( "lib/options.php" );
 
 

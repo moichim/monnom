@@ -10,6 +10,7 @@ import { createOffcanvas } from './utils/offcanvas.ts'
 const init = () => {
 
   createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas" );
+  createOffcanvas( "monnomAboutTrigger", "monnomAboutOffcanvas", true );
 
   assignLink( "monnomPortfolioLink", "monnomPortfolio" );
   assignLink( "monnomFacebookLink", "monnomFacebook" );

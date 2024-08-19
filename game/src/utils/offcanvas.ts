@@ -4,7 +4,8 @@ const classClosed = "monnom-offcanvas__close";
 
 export const createOffcanvas = (
     triggerId: string,
-    offcanvasId: string
+    offcanvasId: string,
+    full: boolean = false
 ) => {
 
     const trigger = document.getElementById( triggerId );
@@ -13,6 +14,12 @@ export const createOffcanvas = (
     if ( container === null || trigger === null ) {
         throw new Error( `Offcanvas container '${offcanvasId}' or trigger '${triggerId}' not found!` );
     } else {
+
+        container.classList.add(
+            full 
+                ? "monnom-offcanvas__full"
+                : "monnom-offcanvas__constrained"
+        );
 
 
         const open = () => {

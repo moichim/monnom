@@ -9,12 +9,18 @@
     padding-bottom: 1rem;
     cursor: pointer;
 
+    color: var(--wp--preset--color--contrast);
+
+    transition: color .3s ease-in-out;
+
     svg {
         // background: #f3f3f0;
         transition: background-color .3s ease-in-out;
     }
 
     &:hover {
+
+        color: var(--wp--preset--color--accent);
         svg {
             background: rgb(255, 255, 177);
         }
