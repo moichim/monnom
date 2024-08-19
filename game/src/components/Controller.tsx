@@ -4,7 +4,6 @@ import { BrickMovements } from "../game/objects/Brick";
 import { IRefPhaserGame, PhaserGame } from "../game/PhaserGame";
 import { BricksScene, CompositionState } from "../game/scene/BricksScene";
 import { CompositionSnapshotType } from "../game/scene/CompositionManager";
-import { MovementRadio } from "./movement/movementRadio";
 
 import { createPortal } from "react-dom";
 import { CompositionClearButton } from "./compositions/CompositionClearButton";
@@ -15,7 +14,7 @@ import { Offcanvas, useOffcanvas } from "./ui/offcanvas";
 import { useController } from "./useController";
 
 export const Controller: React.FC = () => {
-  const [movement, setMovement] = useState<BrickMovements>(
+  const [movement] = useState<BrickMovements>(
     BrickMovements.SWAP
   );
 
@@ -88,14 +87,8 @@ export const Controller: React.FC = () => {
 
       )}
 
-{createPortal(<>
+      {createPortal(<>
         <button onClick={shuffle} className="">Shuffle</button>
-        <MovementRadio
-          value={movement}
-          onChange={(key) => {
-            setMovement(key as BrickMovements);
-          }}
-        />
       </>,
         menuRef
 
@@ -111,13 +104,10 @@ export const Controller: React.FC = () => {
       }} on={controller.state === CompositionState.CHANGED} />
 
       <Offcanvas label={"Visitors' creations"} control={compositionsOffcanvas}>
-        <div style={{ overflow: "scroll", height: "100%" }}>
+        
           <CompositionStore compositions={controller.compositions} restore={restore} onRestore={compositionsOffcanvas.close} />
-        </div>
+        
       </Offcanvas>
-
-
-
 
     </div>
   );

@@ -16,6 +16,7 @@ export const useController = () => {
     useEffect(() => {
 
         setState( CompositionState.NONE );
+
       }, [width, height]);
 
     // Store the composition when ready

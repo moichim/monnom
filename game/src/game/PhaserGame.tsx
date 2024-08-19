@@ -13,7 +13,7 @@ import { BricksScene } from "./scene/BricksScene";
 import StartGame from "./StartGame";
 
 import { setLoading } from "../utils/loader";
-import style from "./PhaserGame.module.css";
+import style from "./PhaserGame.module.scss";
 import { Button } from "@headlessui/react";
 import classNames from "classnames";
 
@@ -30,7 +30,7 @@ interface IProps {
 
 export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
-  ( props, ref) => {
+  (props, ref) => {
     props;
 
     const game = useRef<Phaser.Game | null>(null);
@@ -39,6 +39,9 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
     const [on, setOn] = useState<boolean>(false);
     const [initialised, setInitialised] = useState<boolean>(false);
+    const [isZoom, setIsZoom] = useState<boolean>(false);
+    const [scale, setScale] = useState<number>(1);
+    const [targetScale, setTargetScale] = useState<number>(1);
 
     const startScene = useCallback(() => {
 
@@ -51,25 +54,40 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
         ref.current = { game: game.current, scene: new BricksScene() };
       }
 
+      const newScale = getScale();
+
+      if ( newScale !== null ) {
+        setTargetScale( newScale );
+      }
+
+      setScale( 1 );
+      setIsZoom( false );
+
     }, [game, ref, width, height]);
 
     const destroyScene = () => {
-      setLoading( true );
+      setLoading(true);
 
       if (game.current) {
-        
+
         game.current.scene.sleep("Game");
         game.current.destroy(true);
       }
     }
 
-    useLayoutEffect(() => {
-
-      if ( game.current ) {
-        if ( game.current.canvas.height ) {
-          setScale( window.innerHeight / ( game.current.canvas.height + 100 ) );
+    const getScale = () => {
+      if (game.current) {
+        if (game.current.canvas.height) {
+          return ( 
+            ( window.innerHeight - 100 )
+            / game.current.canvas.height
+          )
         }
       }
+      return null;
+    }
+
+    useLayoutEffect(() => {
 
       startScene();
 
@@ -77,7 +95,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
     }, [ref]);
 
-   
+
 
 
     // Whenever the window dimension changes, trigger the reload (if initialised already)
@@ -104,6 +122,12 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
     // After the scene is initialised, set new properties
     useEffect(() => {
 
+      const newScale = getScale();
+
+      if ( newScale !== null ) {
+        setTargetScale( newScale );
+      }
+
       EventBus.on("current-scene-ready", () => {
 
         // Set this layout as ON
@@ -116,38 +140,62 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
       });
 
+      const listener = (event: KeyboardEvent): void => {
+        console.log(event.key);
+
+        if ( event.key === "~" ) {
+          if ( isZoom === true ) {
+            zoomOut();
+          } else if (isZoom === false) {
+            zoomIn();
+          }
+        }
+
+      };
+      window.addEventListener( "keydown", listener )
+
       return () => {
         EventBus.removeListener("current-scene-ready");
+        window.removeEventListener( "keydown", listener );
       };
-    }, []);
+    }, [isZoom, targetScale]);
 
-    const [out, setOut] = useState<boolean>( false );
-    const [scale, setScale] = useState<number>( 1 );
-
-    useEffect( () => {
+    
+    // Everytime the scale changes, propagate it to the dom
+    useEffect(() => {
 
       if (game.current) {
-        const sc = out === true
-          ? scale
-          : 1;
-        game.current.canvas.style.scale = sc.toString();
+        game.current.canvas.style.scale = scale.toString();
       }
 
-    }, [scale, out, game] );
+    }, [scale, game]);
+
+    const zoomIn = () => {
+      setIsZoom( true );
+      setScale( targetScale );
+    }
+
+    const zoomOut = () => {
+      setIsZoom( false );
+      setScale( 1 );
+    }
 
     return (
       <div
-        className={classNames( style.container, out ? style.container_out : style.container_in )}
+        className={classNames(style.container, isZoom ? style.container_out : style.container_in)}
         style={{
           transform: `translateY( ${on ? 0 : "20vh"} )`,
           opacity: on ? 1 : 0,
           position: "relative",
         }}
       >
-        <Button 
-          style={{position: "fixed", left: 0, top: "5rem", zIndex: 999999}}
-          onClick={()=>{setOut(!out)}}
-        >Zoom out</Button>
+        <Button
+          style={{ position: "fixed", left: 0, top: "5rem", zIndex: 999999, display: "none"}}
+          onClick={() => { isZoom
+            ? zoomOut()
+            : zoomIn() 
+          }}
+        >Zoom</Button>
         <div id="gameContainer"></div>
       </div>
     );

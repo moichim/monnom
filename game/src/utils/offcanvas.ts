@@ -1,4 +1,4 @@
-const classOpen = "monnom-offcanvas__open";
+export const classOpen = "monnom-offcanvas__open";
 const classClosed = "monnom-offcanvas__close";
 
 
@@ -13,7 +13,7 @@ export const createOffcanvas = (
 
     if ( container === null || trigger === null ) {
         throw new Error( `Offcanvas container '${offcanvasId}' or trigger '${triggerId}' not found!` );
-    } else {
+    }
 
         container.classList.add(
             full 
@@ -25,11 +25,13 @@ export const createOffcanvas = (
         const open = () => {
             container.classList.remove( classClosed );
             container.classList.add( classOpen );
+            container.removeAttribute( "aria-hidden" );
         }
 
         const close = () => {
             container.classList.remove( classOpen );
             container.classList.add( classClosed );
+            container.setAttribute( "aria-hidden", "true" );
         }
 
         trigger.addEventListener( "click", open );
@@ -48,7 +50,13 @@ export const createOffcanvas = (
             }
         }
 
+        let isOpen = container.classList.contains( classOpen );
 
-    }
+        return {
+            open,
+            close,
+            isOpen,
+            container
+        }
 
 }

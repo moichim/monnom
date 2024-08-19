@@ -21,7 +21,6 @@ export class BricksScene extends Scene {
   bricks = new BrickManager(this);
   compositions = new CompositionManager(this);
 
-
   area!: Area;
 
   areaLeft!: number;
@@ -110,7 +109,7 @@ export class BricksScene extends Scene {
   create() {
 
     const canvasWidth = this.game.canvas.width;
-    const canvasHeight = this.game.canvas.height;
+    const canvasHeight = window.innerHeight; //this.game.canvas.height;
 
     this.bg = this.add.rectangle(canvasWidth / 2, canvasHeight / 2, canvasWidth, canvasHeight, 0xffffff, 1);
 

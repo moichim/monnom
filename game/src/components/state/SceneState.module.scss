@@ -10,19 +10,23 @@
     cursor: pointer;
 
     color: var(--wp--preset--color--contrast);
+    font-family: var(--wp--preset--font-family--relaway);
 
-    transition: color .3s ease-in-out;
+    transition: color .3s ease-in-out, background-color .3s ease-in-out;
+
+    h3 {
+        font-size: 1rem;
+        font-family: var(--wp--preset--font-family--relaway);
+        font-weight: bold;
+    }
 
     svg {
-        // background: #f3f3f0;
-        transition: background-color .3s ease-in-out;
+        
     }
 
     &:hover {
 
-        color: var(--wp--preset--color--accent);
-        svg {
-            background: rgb(255, 255, 177);
-        }
+        background: rgb(255, 255, 177);
+
     }
 }

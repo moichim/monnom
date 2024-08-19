@@ -5,12 +5,34 @@ import './index.scss'
 import { isDev } from './utils/assetUrl.ts'
 import { prepareBody } from './utils/devTemplateLoad.ts'
 import { assignLink } from './utils/links.ts'
-import { createOffcanvas } from './utils/offcanvas.ts'
+import { classOpen, createOffcanvas } from './utils/offcanvas.ts'
 
 const init = () => {
 
-  createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas" );
-  createOffcanvas( "monnomAboutTrigger", "monnomAboutOffcanvas", true );
+  const contact = createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas" );
+  const about = createOffcanvas( "monnomAboutTrigger", "monnomAboutOffcanvas", true );
+
+  const closeAllOffcanvases = () => {
+    contact.close();
+    about.close();
+  }
+
+  const logos = document.getElementsByClassName( "monnom-header__logo" );
+
+
+  for ( let logo of logos ) {
+
+    logo.addEventListener( "click", () => {
+      if ( about.container.classList.contains( classOpen ) ) {
+
+        closeAllOffcanvases();
+
+      } else {
+        about.open();
+      }
+    } );
+
+  }
 
   assignLink( "monnomPortfolioLink", "monnomPortfolio" );
   assignLink( "monnomFacebookLink", "monnomFacebook" );

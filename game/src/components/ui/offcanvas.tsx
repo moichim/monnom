@@ -1,5 +1,6 @@
 import classNames from "classnames";
-import React, { PropsWithChildren, useCallback, useEffect, useState } from "react";
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 
 export const useOffcanvas = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -42,10 +43,17 @@ export const Offcanvas: React.FC<OffcanvasProps> = props => {
 
     }, [props.control] );
 
-    return <>
-        <div className={classes}>
+    const container = useMemo( () => {
+        const gameRoot = document.getElementById("gameRoot");
+        if ( ! gameRoot ) throw new Error( "GameRoot not found!" );
+        return gameRoot.parentElement;
+    }, [] );
 
-            <div className="monnom-offcanvas__backdrop" onClick={props.control.close}></div>
+    return createPortal(
+    
+        <aside className={classes} aria-hidden={props.control.isOpen === false} aria-label={props.label?.toString()}>
+
+            <div className="monnom-offcanvas__backdrop" onClick={props.control.close} aria-hidden="true"></div>
 
             <article className="monnom-offcanvas__content">
                 <header className="monnom-offcanvas__content__header">
@@ -58,8 +66,9 @@ export const Offcanvas: React.FC<OffcanvasProps> = props => {
                 </main>
             </article>
 
-        </div>
-    </>
+        </aside>
+    
+    , container!)
 
 
 }

@@ -1,9 +1,9 @@
-import { EventBus, GameEvents } from "../EventBus";
-import { BricksScene } from "./BricksScene";
-import { Brick, BrickMovements } from "../objects/Brick";
 import Phaser from "phaser";
 import { v4 as uuid } from "uuid";
 import { apiUrl } from "../../utils/assetUrl";
+import { EventBus, GameEvents } from "../EventBus";
+import { Brick, BrickMovements } from "../objects/Brick";
+import { BricksScene } from "./BricksScene";
 
 export type CompositionSnapshotType = ReturnType<CompositionManager["getCurrentSceneSnapshot"]>;
 
@@ -70,13 +70,15 @@ export class CompositionManager {
 
         this.store.set( snapshot.id, snapshot );
 
-        EventBus.emit( GameEvents.COMP_STORED, snapshot );
+        
 
         fetch( apiUrl( "/wp-json/monnom/v1/store" ), {
             method: "POST",
             body: JSON.stringify( snapshot )
         } )
             .then( response => {
+                EventBus.emit( GameEvents.COMP_STORED, snapshot );
+                this.scene.markAsHasComposition();
                 return response.json();
             })
             .then( console.log )

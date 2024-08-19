@@ -67,6 +67,13 @@ function monnom_register_required_plugins() {
 			'force_activation'   => true, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
 		),
 
+		array(
+			"name" => "ALTCHA Spam Protection",
+			"slug" => "altcha-spam-protection",
+			"required" => true,
+			"force_activation" => true
+		)
+
 	);
 
 	/*
