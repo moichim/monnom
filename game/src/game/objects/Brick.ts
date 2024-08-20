@@ -68,6 +68,17 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       });
 
     this.name = name;
+    this.setMass( 1 );
+    // this.setFrictionAir(0);
+    // this.setFrictionStatic(0);
+
+    //this.scene.matter.world.setGravity()
+
+    
+
+    this.setCollisionCategory( this.scene.bufferCategory );
+
+    this.setCollidesWith( [ this.scene.bufferCategory ] );
 
     this.on(
       Phaser.Input.Events.POINTER_MOVE,
@@ -95,6 +106,8 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
     this.on(
       Phaser.Input.Events.POINTER_DOWN,
       (context: Brick) => {
+
+        console.log( this );
         context;
         this.isDragging = true;
         this.scene.area.setOn();
@@ -102,6 +115,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
         this.scene.startDragging();
         this.scene.markAsCompositionChanged();
         this.scene.game.canvas.style.cursor = "pointer";
+
       },
       this
     );

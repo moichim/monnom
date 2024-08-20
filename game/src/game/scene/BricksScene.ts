@@ -6,6 +6,8 @@ import { CompositionManager } from "./CompositionManager";
 import { assetUrl } from "../../utils/assetUrl";
 import { setLoading } from "../../utils/loader";
 import { Area } from "../objects/Area";
+import { Ground } from "../objects/Ground";
+import { Wall } from "../objects/Wall";
 
 export enum CompositionState {
   NONE,
@@ -21,7 +23,12 @@ export class BricksScene extends Scene {
   bricks = new BrickManager(this);
   compositions = new CompositionManager(this);
 
+  bufferCategory!: number;
+  compositionCategory!: number;
+  groundCategory!: number;
+
   area!: Area;
+  ground!: Ground;
 
   areaLeft!: number;
   areaRight!: number;
@@ -94,6 +101,7 @@ export class BricksScene extends Scene {
     AssetManager.registerToScene(this);
     this.compositions.init();
     this.matter.world.setBounds();
+    
 
     // Load body shapes
     this.load.json("shapes", assetUrl("assets/bricks/shapes.json"));
@@ -108,8 +116,29 @@ export class BricksScene extends Scene {
 
   create() {
 
+    // Collision categories
+    this.bufferCategory = this.matter.world.nextCategory();
+    this.compositionCategory = this.matter.world.nextCategory();
+    this.groundCategory = this.matter.world.nextCategory();
+
+
+
+
     const canvasWidth = this.game.canvas.width;
     const canvasHeight = window.innerHeight; //this.game.canvas.height;
+
+
+
+
+    
+
+    // const matter = this.matter.add.gameObject( wallTop );
+    
+
+
+
+
+    // Add bg
 
     this.bg = this.add.rectangle(canvasWidth / 2, canvasHeight / 2, canvasWidth, canvasHeight, 0xffffff, 1);
 
@@ -134,6 +163,11 @@ export class BricksScene extends Scene {
     this.areaRight = areaOffsetVertical + areaWidth;
 
     this.add.existing(this.area);
+
+    this.ground = new Ground( this, canvasWidth / 2, areaOffsetTop + areaHeight / 2, areaWidth, areaHeight );
+
+    this.add.existing( this.ground );
+
 
     setLoading(false);
 
@@ -209,15 +243,86 @@ export class BricksScene extends Scene {
 
     this.bricks.mount();
 
+
+    this.matter.setCollidesWith( this.bricks.all, [
+      this.bufferCategory,
+      this.compositionCategory,
+      this.groundCategory
+    ] );
+
     // const rebrick = this.matter.add.gameObject( brick );
 
-    this.matter.add.mouseSpring({
+    
+
+
+    const wallX = canvasWidth / 2;
+    const wallY = this.game.canvas.height / 2;
+
+    const wallThickness = 100;
+    const wallOffset = wallThickness / 2;
+
+    const wallWidth = canvasWidth * 2;
+    const wallHeight = this.game.canvas.height * 2;
+
+    // Add wall
+
+    const walls = {
+      top: new Wall(
+        this,
+        wallX,
+        -wallOffset,
+        wallWidth,
+        wallThickness
+      ),
+      bottom: new Wall(
+        this,
+        wallX,
+        this.game.canvas.height + wallOffset,
+        wallWidth,
+        wallThickness
+      ),
+      left: new Wall(
+        this,
+        -wallOffset,
+        wallY,
+        wallThickness,
+        wallHeight
+      ),
+      right: new Wall(
+        this,
+        canvasWidth + wallOffset,
+        wallY,
+        wallThickness,
+        wallHeight
+      )
+    };
+
+    // this.matter.world.setGravity( 0, 1, 0.0001 );
+
+
+    this.matter.add.pointerConstraint({
+      // length: 100,
+      // stiffness: 1,
+      // damping: 100
+    })
+
+    
+    /*
+
+    const spring = this.matter.add.mouseSpring({
       length: 1,
-      stiffness: 0.1,
-      // collisionFilter: {
-      // group: canDrag
-      // }
+      stiffness: 1
     });
+
+    */
+    
+
+    // this.matter.add.gameObject( walls.top );
+
+    // this.matter.add.gameObject( new Wall( this, canvasWidth/2, canvasHeight, canvasWidth, wallThickness ) );
+
+
+
 
     EventBus.emit("current-scene-ready", this);
   }
