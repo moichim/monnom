@@ -155,6 +155,14 @@ export class BricksScene extends Scene {
 
   create() {
 
+    this.matter.add.mouseSpring({
+      length: 1,
+      stiffness: 1,
+      collisionFilter: {
+        group: this.categories.base
+      }
+    });
+
     this.bg = this.add.rectangle(this.canvasWidth / 2, this.canvasHeight / 2, this.canvasWidth, this.canvasHeight, 0xffffff, 1);
 
     window.addEventListener( "mouseout", () => {
@@ -165,8 +173,6 @@ export class BricksScene extends Scene {
     this.area = new Area(this, this.areaOffsetVertical, this.areaOffsetTop, this.areaWidth, this.areaHeight);
 
     this.add.existing(this.area);
-
-    //  Ground
     
     this.buildGroud();
 
@@ -175,13 +181,6 @@ export class BricksScene extends Scene {
     setLoading(false);
 
     this.buildBricks();
-
-    // const rebrick = this.matter.add.gameObject( brick );
-
-    this.matter.add.mouseSpring({
-      length: 1,
-      stiffness: 0.1
-    });
 
     EventBus.emit("current-scene-ready", this);
   }

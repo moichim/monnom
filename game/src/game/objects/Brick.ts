@@ -63,12 +63,13 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       frame,
       {
         ...options,
-        // chamfer: 16, 
+        chamfer: 16, 
         shape: shape as Phaser.Types.Physics.Matter.MatterSetBodyConfig
       });
 
     this.name = name;
-    this.setCollisionCategory( this.scene.categories.base );
+    this.setCollisionCategory(this.scene.categories.base);
+    this.setCollisionGroup( this.scene.categories.base );
     this.setCollidesWith([
       this.scene.categories.base,
       this.scene.categories.composition
