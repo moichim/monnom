@@ -73,8 +73,10 @@ export class MovementManager {
     public atPlaceInComposition() {
         this.brick.inComposition = true;
         this.brick.scene.markAsHasComposition();
-        this.brick.setIgnoreGravity( true );
-        this.brick.setStatic( true );
+        this.brick.setIgnoreGravity( false );
+        // this.brick.setStatic( true );
+        this.brick.setCollisionCategory( this.brick.scene.categories.composition );
+        this.brick.setCollidesWith( Object.values( this.brick.scene.categories ) );
         this._movement = undefined;
     }
 
@@ -104,9 +106,11 @@ export class MovementManager {
         // this.brick.inComposition = true;
 
         // if ( this.brick.inComposition ) {
+        /*
             this.brick.setAngularSpeed(0)
                 .setAngularVelocity(0)
                 .setVelocity(0);
+            */
        //  }
         // this.brick.inComposition = true;
         // this.brick.setIgnoreGravity( true );

@@ -75,6 +75,10 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       this.scene.categories.composition
     ]);
 
+    this.setMass(1000);
+
+    this.setFriction( 10 );
+
     this.on(
       Phaser.Input.Events.POINTER_MOVE,
       (event: MouseEvent) => {
