@@ -7,6 +7,7 @@ import { assetUrl } from "../../utils/assetUrl";
 import { setLoading } from "../../utils/loader";
 import { Area } from "../objects/Area";
 import { Ground } from "../objects/Ground";
+import { Wall } from "../objects/Wall";
 
 export enum CompositionState {
   NONE,
@@ -33,11 +34,25 @@ export class BricksScene extends Scene {
 
   area!: Area;
   ground!: Ground;
+  walls: {
+    top?: Wall,
+    bottom?: Wall,
+    left?: Wall,
+    right?: Wall
+  } = {};
+  public categories!: {
+    base:number,
+    ground: number,
+    composition: number
+  };
 
   areaLeft!: number;
   areaRight!: number;
   areaTop!: number;
   areaBottom!: number;
+
+  public bg!: Phaser.GameObjects.Rectangle;
+  protected bgTween!: Phaser.Tweens.Tween;
 
   protected state: CompositionState = CompositionState.NONE;
   public markAsHasComposition() {
@@ -68,8 +83,7 @@ export class BricksScene extends Scene {
     }
   }
 
-  public bg!: Phaser.GameObjects.Rectangle;
-  protected bgTween!: Phaser.Tweens.Tween;
+  
 
   public startDragging() {
     this.bg.fillColor = 0xeeeeee;
@@ -119,6 +133,9 @@ export class BricksScene extends Scene {
 
     (window as any).Scene = this;
 
+    this.createCollisionCategories();
+    this.calculateDimensions();
+
 
   }
 
@@ -127,41 +144,195 @@ export class BricksScene extends Scene {
     [index: string]: Phaser.Types.Physics.Matter.MatterBodyConfig
   };
 
+  canvasWidth!: number;
+  canvasHeight!: number;
+  windowHeight!: number;
+  areaOffsetTop!: number;
+  areaOffsetBottom!: number;
+  areaOffsetVertical!: number;
+  areaWidth!: number;
+  areaHeight!: number;
+
   create() {
 
-    const canvasWidth = this.game.canvas.width;
-    const canvasHeight = window.innerHeight; //this.game.canvas.height;
-
-    this.bg = this.add.rectangle(canvasWidth / 2, canvasHeight / 2, canvasWidth, canvasHeight, 0xffffff, 1);
+    this.bg = this.add.rectangle(this.canvasWidth / 2, this.canvasHeight / 2, this.canvasWidth, this.canvasHeight, 0xffffff, 1);
 
     window.addEventListener( "mouseout", () => {
       this.bricks.currentlyDraggin.map( brick => brick.fall() );
       this.endDragging();
     } );
 
-
-    const areaOffsetTop = 70;
-    const areaOffsetBottom = canvasHeight * 1 / 3;
-    const areaOffsetVertical = 70;
-
-    const areaWidth = canvasWidth - (areaOffsetVertical * 2);
-    const areaHeight = canvasHeight - areaOffsetTop - areaOffsetBottom;
-
-    this.area = new Area(this, areaOffsetVertical, areaOffsetTop, areaWidth, areaHeight);
-
-    this.areaTop = areaOffsetTop;
-    this.areaBottom = areaOffsetTop + areaHeight;
-    this.areaLeft = areaOffsetVertical;
-    this.areaRight = areaOffsetVertical + areaWidth;
+    this.area = new Area(this, this.areaOffsetVertical, this.areaOffsetTop, this.areaWidth, this.areaHeight);
 
     this.add.existing(this.area);
 
     //  Ground
-    this.ground = new Ground( this, canvasWidth/2, areaOffsetTop + areaHeight, areaWidth, areaHeight );
-    this.add.existing( this.ground );
-    this.matter.add.gameObject( this.ground );
+    
+    this.buildGroud();
+
+    this.buildWalls();
 
     setLoading(false);
+
+    this.buildBricks();
+
+    // const rebrick = this.matter.add.gameObject( brick );
+
+    this.matter.add.mouseSpring({
+      length: 1,
+      stiffness: 0.1
+    });
+
+    EventBus.emit("current-scene-ready", this);
+  }
+
+  addBrick(x: number, y: number, textureId: string) {
+    this.bricks.add(`brick-${x}-${y}`, x, y, textureId);
+  }
+
+  fall() {
+    this.bricks.all.forEach((brick) => brick.fall());
+    this.markAsCompNone();
+  }
+
+  changeScene() {
+    this.scene.start("GameOver");
+  }
+
+  shuffle() {
+    const step = this.game.canvas.height / 6;
+
+    const lowest = this.bricks.all
+      .filter((brick) => brick.y > step * 4)
+      .sort(() => 0.5 - Math.random());
+
+    lowest.forEach((brick) =>
+      brick.applyForce(new Phaser.Math.Vector2(
+        (0.5 - Math.random()) * 0.2,
+        -0.3 + -0.5 * Math.random())
+      )
+    );
+  }
+
+  protected getTargetScale() {
+
+    return ( window.innerHeight - 100 ) / this.canvas.height;
+
+  }
+
+  public zoomIn() {
+    this._isZoomIn = true;
+    this.canvas.style.scale = this.getTargetScale().toString();
+    this.container.style.paddingTop = "50px";
+    this.container.style.backgroundColor = "red";
+    EventBus.emit( GameEvents.ZOOM_STATE, true );
+  }
+
+  public zoomOut() {
+    this._isZoomIn = false;
+    this.canvas.style.scale = "1";
+    this.container.style.paddingTop = "0px";
+    this.container.style.backgroundColor = "white";
+    EventBus.emit( GameEvents.ZOOM_STATE, false );
+  }
+
+  public deactivateElements() {
+    this.game.pause();
+    this.bricks.all.forEach( brick => brick.setActive(false) );
+  }
+
+  public activateElements() {
+    this.game.resume();
+    this.bricks.all.forEach( brick => brick.setActive(true) );
+
+  }
+
+  protected calculateDimensions() {
+
+    this.canvasWidth = this.game.canvas.width;
+    this.canvasHeight = this.game.canvas.height;
+    this.windowHeight = window.innerHeight;
+
+    this.areaOffsetTop = 70;
+    this.areaOffsetBottom = this.windowHeight * 1 / 3;
+    this.areaOffsetVertical = 70;
+
+    this.areaWidth = this.canvasWidth - (this.areaOffsetVertical * 2);
+    this.areaHeight = this.windowHeight - this.areaOffsetTop - this.areaOffsetBottom;
+
+    this.areaTop = this.areaOffsetTop;
+    this.areaBottom = this.areaOffsetTop + this.areaHeight;
+    this.areaLeft = this.areaOffsetVertical;
+    this.areaRight = this.areaOffsetVertical + this.areaWidth;
+
+  }
+
+  protected createCollisionCategories() {
+    this.categories = {
+      base: this.matter.world.nextCategory(),
+      ground: this.matter.world.nextCategory(),
+      composition: this.matter.world.nextCategory()
+    }
+  }
+
+
+
+
+  protected buildWalls() {
+
+    const wallThickness = 50;
+    const wallOffset = wallThickness / 2;
+    const wallX = this.canvasWidth / 2;
+    const wallWidth = this.canvasWidth * 2;
+    const wallY = this.canvasHeight / 2;
+    const wallHeight = this.canvasHeight * 2;
+
+    this.walls.top = new Wall(
+      this,
+      wallX,
+      - wallOffset,
+      wallWidth,
+      wallThickness
+    );
+
+    this.walls.bottom = new Wall(
+      this,
+      wallX,
+      this.canvasHeight + wallOffset,
+      wallWidth,
+      wallThickness
+    );
+
+    this.walls.left = new Wall(
+      this,
+      -wallOffset,
+      wallY,
+      wallThickness,
+      wallHeight
+    );
+
+    this.walls.right = new Wall(
+      this,
+      this.canvasWidth + wallOffset,
+      wallY,
+      wallThickness,
+      wallHeight
+    );
+
+  }
+
+  protected buildGroud() {
+
+    this.ground = new Ground( 
+      this, 
+      this.canvasWidth/2, 
+      this.areaOffsetTop + ( this.areaHeight / 6 * 5 ), 
+      this.areaWidth, 
+      20
+    );
+  }
+
+  protected buildBricks() {
 
     const shapes = this.cache.json.get("shapes");
     this.shapes = shapes;
@@ -234,78 +405,6 @@ export class BricksScene extends Scene {
     });
 
     this.bricks.mount();
-
-    // const rebrick = this.matter.add.gameObject( brick );
-
-    this.matter.add.mouseSpring({
-      length: 1,
-      stiffness: 0.1,
-      // collisionFilter: {
-      // group: canDrag
-      // }
-    });
-
-    EventBus.emit("current-scene-ready", this);
-  }
-
-  addBrick(x: number, y: number, textureId: string) {
-    this.bricks.add(`brick-${x}-${y}`, x, y, textureId);
-  }
-
-  fall() {
-    this.bricks.all.forEach((brick) => brick.fall());
-    this.markAsCompNone();
-  }
-
-  changeScene() {
-    this.scene.start("GameOver");
-  }
-
-  shuffle() {
-    const step = this.game.canvas.height / 6;
-
-    const lowest = this.bricks.all
-      .filter((brick) => brick.y > step * 4)
-      .sort(() => 0.5 - Math.random());
-
-    lowest.forEach((brick) =>
-      brick.applyForce(new Phaser.Math.Vector2(
-        (0.5 - Math.random()) * 0.2,
-        -0.3 + -0.5 * Math.random())
-      )
-    );
-  }
-
-  protected getTargetScale() {
-
-    return ( window.innerHeight - 100 ) / this.canvas.height;
-
-  }
-
-  public zoomIn() {
-    this._isZoomIn = true;
-    this.canvas.style.scale = this.getTargetScale().toString();
-    this.container.style.paddingTop = "50px";
-    this.container.style.backgroundColor = "red";
-    EventBus.emit( GameEvents.ZOOM_STATE, true );
-  }
-
-  public zoomOut() {
-    this._isZoomIn = false;
-    this.canvas.style.scale = "1";
-    this.container.style.paddingTop = "0px";
-    this.container.style.backgroundColor = "white";
-    EventBus.emit( GameEvents.ZOOM_STATE, false );
-  }
-
-  public deactivateElements() {
-    this.game.pause();
-    this.bricks.all.forEach( brick => brick.setActive(false) );
-  }
-
-  public activateElements() {
-    this.game.resume();
-    this.bricks.all.forEach( brick => brick.setActive(true) );
 
   }
 

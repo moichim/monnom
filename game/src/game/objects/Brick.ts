@@ -68,6 +68,11 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       });
 
     this.name = name;
+    this.setCollisionCategory( this.scene.categories.base );
+    this.setCollidesWith([
+      this.scene.categories.base,
+      this.scene.categories.composition
+    ]);
 
     this.on(
       Phaser.Input.Events.POINTER_MOVE,

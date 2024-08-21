@@ -26,6 +26,7 @@ register( "line", "assets/bricks/line.png" );
 register( "obdelnik", "assets/bricks/obdelnik.png" );
 register( "pacman", "assets/bricks/pacman.png" );
 register( "polygon", "assets/bricks/polygon.png" );
+register( "ground", "assets/ground.png" );
 
 export class AssetManager {
 
