@@ -96,12 +96,14 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       Phaser.Input.Events.POINTER_DOWN,
       (context: Brick) => {
         context;
-        this.isDragging = true;
-        this.scene.area.setOn();
-        this.movement.startDragging();
-        this.scene.startDragging();
-        this.scene.markAsCompositionChanged();
-        this.scene.game.canvas.style.cursor = "pointer";
+        if (this.active) {
+          this.isDragging = true;
+          this.scene.area.setOn();
+          this.movement.startDragging();
+          this.scene.startDragging();
+          this.scene.markAsCompositionChanged();
+          this.scene.game.canvas.style.cursor = "pointer";
+        }
       },
       this
     );

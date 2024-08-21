@@ -1,10 +1,9 @@
 import classNames from "classnames";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Offcanvas, useOffcanvas } from "../ui/offcanvas";
 import styles from "./CompositionStoreButton.module.scss";
 
-import 'altcha'
-import { apiUrl } from "../../utils/assetUrl";
+import 'altcha';
 import { createPortal } from "react-dom";
 
 type CompositionClearButtonProps = {
@@ -46,42 +45,6 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
         if ( ! gameRoot ) throw new Error( "GameRoot not found!" );
         return gameRoot.parentElement;
     }, [] );
-
-    const widgetRef = useRef<HTMLElement>(null);
-    const formRef = useRef<HTMLFormElement>( null );
-
-    useEffect(() => {
-
-        const {current} = widgetRef;
-
-        const fn = (event: Event) => {
-            event.preventDefault();
-            console.log(event);
-
-        };
-
-        if ( current ) {
-            current.addEventListener( "verified", fn );
-            return current.removeEventListener( "verified", fn );
-        }
-
-    }, []);
-
-    useEffect( () => {
-
-        if ( formRef.current ) {
-            const submitHandler = (event: SubmitEvent): void => {
-                console.log( event );
-                event.preventDefault();
-            };
-            formRef.current.addEventListener( "submit", submitHandler );
-            return () => {formRef.current?.removeEventListener( "submit", submitHandler )}
-        }
-
-    }, [] );
-
-
-
     
 
     const successHandler = () => {
@@ -118,10 +81,6 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
         }
 
     }, [counter] );
-
-    if ( props.on === false ) {
-        return <></>
-    }
 
 
     return <>
@@ -164,14 +123,8 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
                         }}></div>
                     </div>
                 </div>
-                : <form 
+                : <div 
                 className={styles.composition_close__wrapper} 
-                ref={formRef} 
-                method="post" 
-                onSubmit={(event) => {
-                    event.preventDefault();
-                    successHandler();
-                }}
             >
 
                 <div>Send us your creation and share it with other visitors of our site!</div>
@@ -188,21 +141,13 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
                     value={person}
                 ></input>
 
-                <altcha-widget
-                    challengeurl={apiUrl("/wp-json/altcha/v1/challenge")}
-                    floating
-                    ref={widgetRef}
-                    hidefooter
-                    hidelogo
-                ></altcha-widget>
-
                 <button 
-                    // onClick={successHAndler}
+                    onClick={successHandler}
                     disabled={disabled}
-                    type="submit"
-                >Uložit</button>
+                    // type="submit"
+                >Submit</button>
 
-            </form>
+            </div>
             }
 
         </Offcanvas>, container! )}

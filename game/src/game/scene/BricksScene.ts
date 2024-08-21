@@ -6,6 +6,7 @@ import { CompositionManager } from "./CompositionManager";
 import { assetUrl } from "../../utils/assetUrl";
 import { setLoading } from "../../utils/loader";
 import { Area } from "../objects/Area";
+import { Ground } from "../objects/Ground";
 
 export enum CompositionState {
   NONE,
@@ -14,6 +15,15 @@ export enum CompositionState {
 }
 
 export class BricksScene extends Scene {
+
+  protected _isZoomIn: boolean = false;
+  public get isZoomIn() {
+    return this._isZoomIn;
+  }
+
+  protected canvas!: HTMLCanvasElement;
+  protected container!: HTMLElement;
+
   camera!: Phaser.Cameras.Scene2D.Camera;
   blockTexture!: Phaser.GameObjects.Image;
   gameText!: Phaser.GameObjects.Text;
@@ -22,6 +32,7 @@ export class BricksScene extends Scene {
   compositions = new CompositionManager(this);
 
   area!: Area;
+  ground!: Ground;
 
   areaLeft!: number;
   areaRight!: number;
@@ -91,12 +102,22 @@ export class BricksScene extends Scene {
 
   preload() {
 
+    this.canvas = this.game.canvas;
+    this.container = this.game.canvas.parentElement!;
+
+    this.canvas.style.transition = "scale .3s ease-in-out";
+    this.container.style.transition = "padding-top .3s ease-in-out, background-color .2s ease-in-out";
+    this.container.style.backgroundColor = "white";
+
+
     AssetManager.registerToScene(this);
     this.compositions.init();
     this.matter.world.setBounds();
 
     // Load body shapes
     this.load.json("shapes", assetUrl("assets/bricks/shapes.json"));
+
+    (window as any).Scene = this;
 
 
   }
@@ -134,6 +155,11 @@ export class BricksScene extends Scene {
     this.areaRight = areaOffsetVertical + areaWidth;
 
     this.add.existing(this.area);
+
+    //  Ground
+    this.ground = new Ground( this, canvasWidth/2, areaOffsetTop + areaHeight, areaWidth, areaHeight );
+    this.add.existing( this.ground );
+    this.matter.add.gameObject( this.ground );
 
     setLoading(false);
 
@@ -249,4 +275,40 @@ export class BricksScene extends Scene {
       )
     );
   }
+
+  protected getTargetScale() {
+
+    return ( window.innerHeight - 100 ) / this.canvas.height;
+
+  }
+
+  public zoomIn() {
+    this._isZoomIn = true;
+    this.canvas.style.scale = this.getTargetScale().toString();
+    this.container.style.paddingTop = "50px";
+    this.container.style.backgroundColor = "red";
+    EventBus.emit( GameEvents.ZOOM_STATE, true );
+  }
+
+  public zoomOut() {
+    this._isZoomIn = false;
+    this.canvas.style.scale = "1";
+    this.container.style.paddingTop = "0px";
+    this.container.style.backgroundColor = "white";
+    EventBus.emit( GameEvents.ZOOM_STATE, false );
+  }
+
+  public deactivateElements() {
+    this.game.pause();
+    this.bricks.all.forEach( brick => brick.setActive(false) );
+  }
+
+  public activateElements() {
+    this.game.resume();
+    this.bricks.all.forEach( brick => brick.setActive(true) );
+
+  }
+
+
+
 }

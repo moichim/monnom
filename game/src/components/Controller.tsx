@@ -40,7 +40,6 @@ export const Controller: React.FC = () => {
   }, [phaserRef, setScene]);
 
 
-
   const restore = (composition: CompositionSnapshotType) => {
     if (scene) {
       scene.compositions.restoreSnapshot(composition, movement);
@@ -89,6 +88,15 @@ export const Controller: React.FC = () => {
 
       {createPortal(<>
         <button onClick={shuffle} className="">Shuffle</button>
+        <button onClick={() => {
+          if ( scene ) {
+            if ( scene.isZoomIn ) {
+              scene.zoomOut();
+            } else {
+              scene.zoomIn();
+            }
+          }
+        }}>{controller.isZoom ? "Zoom out" : "Zoom in"}</button>
       </>,
         menuRef
 

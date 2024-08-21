@@ -32,8 +32,6 @@ const StartGame = (parent: string) => {
   const width = window.innerWidth;
   const height = totalArea / width;
 
-  console.log( width, height );
-
   const config = {
     ...baseConfig,
     width: width,
@@ -42,7 +40,11 @@ const StartGame = (parent: string) => {
   };
 
 
-  return new Game({ ...config, parent });
+  const game = new Game({ ...config, parent });
+
+  (window as any).Game = game;
+
+  return game;
 };
 
 export default StartGame;

@@ -10,6 +10,7 @@ export const useController = () => {
     // Stored compositions array
     const [compositions, setCompositions] = useState<CompositionSnapshotType[]>([]);
     const [state, setState] = useState<CompositionState>( CompositionState.NONE );
+    const [isZoom, setIsZoom] = useState<boolean>(false);
 
     const { width = window.innerWidth, height = window.innerHeight } = useWindowSize();
 
@@ -53,7 +54,7 @@ export const useController = () => {
 
     
 
-    // Reflect has composition
+    // Reflect compositions state and zoom state
     useEffect( () => {
 
         EventBus.on(
@@ -63,11 +64,19 @@ export const useController = () => {
             }
         );
 
+        EventBus.on(
+            GameEvents.ZOOM_STATE,
+            ( value: boolean) => {
+                setIsZoom( value );
+            }
+        );
+
     }, [] );
 
     return {
         compositions,
-        state
+        state,
+        isZoom
     }
 
 
