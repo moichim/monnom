@@ -15,9 +15,15 @@ export const CompositionStore: React.FC<CompositionStoreProps> = props => {
 
   const filtered = useMemo(() => {
 
+    const isSmall = (window as any).isSmall as boolean;
+
+    const aspect = isSmall
+      ? 1.3
+      : 1;
+
     return props.compositions.filter(composition => {
-      return composition.dimension.composition.width < (width - 100)
-        && composition.dimension.composition.height < (height - 200)
+      return composition.dimension.composition.width < ( ( width * aspect ) - 100)
+        && composition.dimension.composition.height < ( ( height * aspect ) - 100)
       // && composition.dimension.composition.width > ( width - 200 )
       // && composition.dimension.composition.height > ( height - 200 )
     })

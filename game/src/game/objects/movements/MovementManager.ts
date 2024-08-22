@@ -74,9 +74,9 @@ export class MovementManager {
         this.brick.inComposition = true;
         this.brick.scene.markAsHasComposition();
         this.brick.setIgnoreGravity( false );
-        // this.brick.setStatic( true );
-        this.brick.setCollisionCategory( this.brick.scene.categories.composition );
-        this.brick.setCollidesWith( Object.values( this.brick.scene.categories ) );
+        this.brick.setStatic( true );
+        // this.brick.setCollisionCategory( this.brick.scene.categories.composition );
+        // this.brick.setCollidesWith( Object.values( this.brick.scene.categories ) );
         this._movement = undefined;
     }
 

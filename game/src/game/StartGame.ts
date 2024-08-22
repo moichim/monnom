@@ -1,6 +1,8 @@
 import { AUTO, Game } from "phaser";
 import { BricksScene } from "./scene/BricksScene";
 
+
+
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const baseConfig: Phaser.Types.Core.GameConfig = {
@@ -87,26 +89,35 @@ const baseConfig: Phaser.Types.Core.GameConfig = {
 
 const StartGame = (parent: string) => {
 
-  const windowArea = window.innerWidth * window.innerHeight;
+  let w = window.innerWidth;
+  let h = window.innerHeight;
+
+  const isSmall = window.innerWidth < 700;
+  if ( isSmall ) {
+    w = w * 1.3;
+    h = h * 1.3;
+  }
+
+  const windowArea = w * h;
 
   const targetFreeArea = windowArea * 4 / 5;
   const bricksArea = 1454690 / 3;
   const totalArea = targetFreeArea + bricksArea;
 
-  const width = window.innerWidth;
+  const width = w;
   const height = totalArea / width;
 
   const config = {
     ...baseConfig,
     width: width,
     height: height
-
   };
 
 
   const game = new Game({ ...config, parent });
 
   (window as any).Game = game;
+  (window as any).isSmall = isSmall;
 
   return game;
 };

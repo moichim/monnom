@@ -44,6 +44,8 @@ $collapse: 900px;
         flex-direction: column;
         justify-content: flex-end;
         align-items: flex-end;
+
+        
     }
 
     @media ( min-width: $collapse ) {
@@ -53,6 +55,8 @@ $collapse: 900px;
         justify-content: flex-end;
         align-items: center;
         gap: 10px;
+
+        
     }
 }
 
@@ -78,6 +82,13 @@ $collapse: 900px;
     }
 }
 
+.monnom-header__link__control {
+    // background: rgb(238, 238, 238);
+    // padding: .3rem;
+    // color: white;
+    // border-radius: 50%;
+    // align-self: center;
+}
 .monnom-header__icon {
     border-bottom: 0 !important;
     text-decoration: none;

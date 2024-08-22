@@ -21,7 +21,12 @@ export class Ground extends Wall {
         );
 
         this.setCollisionCategory( this.scene.categories.ground );
-        this.setCollidesWith( this.scene.categories.composition );
+        // this.setCollidesWith( this.scene.categories.composition );
+
+        this.setFriction( 0 );
+        this.setFrictionStatic( 0 );
+
+        this.setAlpha( 0 );
 
     }
 

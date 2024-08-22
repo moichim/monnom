@@ -17,6 +17,10 @@ export enum CompositionState {
 
 export class BricksScene extends Scene {
 
+  protected isSmall: boolean = (window as any).isSmall as boolean;
+
+  protected initialScale!: number;
+
   protected _isZoomIn: boolean = false;
   public get isZoomIn() {
     return this._isZoomIn;
@@ -136,6 +140,8 @@ export class BricksScene extends Scene {
     this.createCollisionCategories();
     this.calculateDimensions();
 
+    this.initialScale = window.innerWidth / this.canvasWidth;
+
 
   }
 
@@ -153,15 +159,51 @@ export class BricksScene extends Scene {
   areaWidth!: number;
   areaHeight!: number;
 
+  spring!: MatterJS.ConstraintType;
+
+  cursor!: Phaser.Physics.Matter.Sprite;
+
+  
+
   create() {
 
-    this.matter.add.mouseSpring({
+    /*
+    this.matter.world.addListener( Phaser.Input.Events.POINTER_MOVE, console.log );
+
+    
+
+    const cursor = this.matter.add.sprite( this.canvasWidth / 2, this.windowHeight / 2, "ground" );
+
+    cursor.setStatic( true );
+
+    cursor.setDisplaySize( 10,10 );
+
+    this.canvas.addEventListener( "mousemove", event => {
+
+      console.log( this.isZoomIn, event );
+
+      cursor.setPosition( event.layerX, event.layerY );
+    } );
+
+    this.cursor = cursor;
+
+    */
+
+
+    const options = {
       length: 1,
       stiffness: 1,
+      // eslint-disable-next-line
       collisionFilter: {
         group: this.categories.base
       }
-    });
+    };
+    
+
+
+    
+    this.spring = this.matter.add.mouseSpring(options);
+    
 
     this.bg = this.add.rectangle(this.canvasWidth / 2, this.canvasHeight / 2, this.canvasWidth, this.canvasHeight, 0xffffff, 1);
 
@@ -215,7 +257,15 @@ export class BricksScene extends Scene {
 
   protected getTargetScale() {
 
-    return ( window.innerHeight - 100 ) / this.canvas.height;
+    const height = this.isSmall 
+      ? this.canvasHeight * 0.75
+      : this.canvasHeight;
+
+    const offset = this.isSmall
+      ? 100 * 1.3
+      : 100;
+
+    return ( window.innerHeight - offset ) / height;
 
   }
 
@@ -223,13 +273,16 @@ export class BricksScene extends Scene {
     this._isZoomIn = true;
     this.canvas.style.scale = this.getTargetScale().toString();
     this.container.style.paddingTop = "50px";
-    this.container.style.backgroundColor = "red";
+    this.container.style.backgroundColor = "lightgray";
     EventBus.emit( GameEvents.ZOOM_STATE, true );
   }
 
   public zoomOut() {
     this._isZoomIn = false;
-    this.canvas.style.scale = "1";
+
+    console.log( this.isSmall );
+    this.canvas.style.scale = "1";//;this.initialScale.toString();
+    this.canvas.style.width = "100%";
     this.container.style.paddingTop = "0px";
     this.container.style.backgroundColor = "white";
     EventBus.emit( GameEvents.ZOOM_STATE, false );
@@ -258,6 +311,10 @@ export class BricksScene extends Scene {
 
     this.areaWidth = this.canvasWidth - (this.areaOffsetVertical * 2);
     this.areaHeight = this.windowHeight - this.areaOffsetTop - this.areaOffsetBottom;
+
+    if ( (window as any).isSmall ) {
+      this.areaHeight = this.areaHeight * 1.3;
+    }
 
     this.areaTop = this.areaOffsetTop;
     this.areaBottom = this.areaOffsetTop + this.areaHeight;

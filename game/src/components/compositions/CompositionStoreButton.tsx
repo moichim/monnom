@@ -5,6 +5,7 @@ import styles from "./CompositionStoreButton.module.scss";
 
 import 'altcha';
 import { createPortal } from "react-dom";
+import { apiUrl } from "../../utils/assetUrl";
 
 type CompositionClearButtonProps = {
     fn: (name: string, person: string) => void,
@@ -26,7 +27,7 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
     const [person, setPerson] = useState<string>();
 
     const [may, setMay] = useState<boolean>(false);
-    const [counter, setCounter] = useState<number>( 0 );
+    const [counter, setCounter] = useState<number>(0);
 
     const disabled = useMemo(() => {
 
@@ -40,12 +41,12 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
 
     const [hover, setHover] = useState<boolean>(false);
 
-    const container = useMemo( () => {
+    const container = useMemo(() => {
         const gameRoot = document.getElementById("gameRoot");
-        if ( ! gameRoot ) throw new Error( "GameRoot not found!" );
+        if (!gameRoot) throw new Error("GameRoot not found!");
         return gameRoot.parentElement;
-    }, [] );
-    
+    }, []);
+
 
     const successHandler = () => {
         if (message && person) {
@@ -54,33 +55,33 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
 
             const widgets = document.getElementsByTagName("altcha-widget");
 
-            for ( let widget of widgets ) {
+            for (let widget of widgets) {
                 widget.remove();
             }
 
-            setMay( false );
-            setCounter( 30 );
+            setMay(false);
+            setCounter(30);
 
         }
     };
 
 
-    useEffect( () => {
+    useEffect(() => {
 
-        if ( counter > 0 ) {
-            const timer = setTimeout( () => {
-                setCounter( counter - 1 );
-            }, 1000 );
+        if (counter > 0) {
+            const timer = setTimeout(() => {
+                setCounter(counter - 1);
+            }, 1000);
 
-            return () => { clearTimeout( timer ) }
+            return () => { clearTimeout(timer) }
         } else {
-            setMay( true );
-            setCounter( 0 );
+            setMay(true);
+            setCounter(0);
             setPerson("");
             setMessage("");
         }
 
-    }, [counter] );
+    }, [counter]);
 
 
     return <>
@@ -104,7 +105,7 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
             </div>
         </div>
 
-        {props.on && createPortal( <Offcanvas label="Save your composition!" control={offcanvas}>
+        {props.on && createPortal(<Offcanvas label="Save your composition!" control={offcanvas}>
 
             {may === false && counter > 0
                 ? <div className={styles.composition_close__wrapper}>
@@ -123,34 +124,45 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
                         }}></div>
                     </div>
                 </div>
-                : <div 
-                className={styles.composition_close__wrapper} 
-            >
+                : <form
+                    className={styles.composition_close__wrapper}
+                    onSubmit={event => {
+                        event.preventDefault();
+                        successHandler();
+                    }}
+                >
 
-                <div>Send us your creation and share it with other visitors of our site!</div>
+                    <div>Send us your creation and share it with other visitors of our site!</div>
 
-                <input
-                    onChange={event => setMessage(event.target.value)}
-                    placeholder="Your message"
-                    value={message}
-                ></input>
+                    <input
+                        onChange={event => setMessage(event.target.value)}
+                        placeholder="Your message"
+                        value={message}
+                    ></input>
 
-                <input
-                    onChange={event => setPerson(event.target.value)}
-                    placeholder="Your nickname"
-                    value={person}
-                ></input>
+                    <input
+                        onChange={event => setPerson(event.target.value)}
+                        placeholder="Your nickname"
+                        value={person}
+                    ></input>
 
-                <button 
-                    onClick={successHandler}
-                    disabled={disabled}
-                    // type="submit"
-                >Submit</button>
+                    <altcha-widget
+                        challengeurl={apiUrl("/wp-json/altcha/v1/challenge")}
+                        floating
+                        hidefooter
+                        hidelogo
+                    ></altcha-widget>
 
-            </div>
+                    <button
+                        // onClick={successHandler}
+                        disabled={disabled}
+                        type="submit"
+                    >Submit</button>
+
+                </form>
             }
 
-        </Offcanvas>, container! )}
+        </Offcanvas>, container!)}
     </>
 
 }

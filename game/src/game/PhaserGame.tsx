@@ -33,7 +33,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
 
     const game = useRef<Phaser.Game | null>(null);
 
-    const { width = window.innerWidth, height = window.innerHeight } = useWindowSize();
+    const { width = window.innerWidth} = useWindowSize();
 
     const [on, setOn] = useState<boolean>(false);
     const [initialised, setInitialised] = useState<boolean>(false);
@@ -125,7 +125,7 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
       return () => {
         clearTimeout(timer);
       }
-    }, [width, height]);
+    }, [width]);
 
     return (
       <div
