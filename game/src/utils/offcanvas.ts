@@ -1,4 +1,5 @@
 import { BricksScene } from "../game/scene/BricksScene";
+import { Sizing } from "./sizing";
 
 export const classOpen = "monnom-offcanvas__open";
 const classClosed = "monnom-offcanvas__close";
@@ -29,6 +30,7 @@ export const createOffcanvas = (
             container.classList.add( classOpen );
             container.removeAttribute( "aria-hidden" );
             ( (window as any).Scene as BricksScene ).deactivateElements();
+            Sizing.setOffcanvasOpen( true );
         }
 
         const close = () => {
@@ -36,6 +38,7 @@ export const createOffcanvas = (
             container.classList.add( classClosed );
             container.setAttribute( "aria-hidden", "true" );
             ( (window as any).Scene as BricksScene ).activateElements();
+            Sizing.setOffcanvasOpen( false );
         }
 
         trigger.addEventListener( "click", open );

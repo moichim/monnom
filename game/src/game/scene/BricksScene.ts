@@ -8,6 +8,7 @@ import { setLoading } from "../../utils/loader";
 import { Area } from "../objects/Area";
 import { Ground } from "../objects/Ground";
 import { Wall } from "../objects/Wall";
+import { Sizing } from "../../utils/sizing";
 
 export enum CompositionState {
   NONE,
@@ -17,7 +18,7 @@ export enum CompositionState {
 
 export class BricksScene extends Scene {
 
-  protected isSmall: boolean = (window as any).isSmall as boolean;
+  protected dimensions = Sizing.getCanvasDimensions();
 
   protected initialScale!: number;
 
@@ -250,13 +251,20 @@ export class BricksScene extends Scene {
     lowest.forEach((brick) =>
       brick.applyForce(new Phaser.Math.Vector2(
         (0.5 - Math.random()) * 0.2,
-        -0.3 + -0.5 * Math.random())
+        -0.9 + ( -0.5 * Math.random() ))
       )
     );
   }
 
   protected getTargetScale() {
 
+
+    const height = this.canvasHeight * this.dimensions.size.aspectNegative;
+
+    const offset = this.dimensions.size.offset;
+
+    const targetSize = (window.innerHeight - offset) / height;
+    /*
     const height = this.isSmall 
       ? this.canvasHeight * 0.75
       : this.canvasHeight;
@@ -264,8 +272,11 @@ export class BricksScene extends Scene {
     const offset = this.isSmall
       ? 100 * 1.3
       : 100;
+      */
 
-    return ( window.innerHeight - offset ) / height;
+    console.log( targetSize, this.dimensions );
+
+    return targetSize;
 
   }
 
@@ -280,7 +291,6 @@ export class BricksScene extends Scene {
   public zoomOut() {
     this._isZoomIn = false;
 
-    console.log( this.isSmall );
     this.canvas.style.scale = "1";//;this.initialScale.toString();
     this.canvas.style.width = "100%";
     this.container.style.paddingTop = "0px";
@@ -310,11 +320,7 @@ export class BricksScene extends Scene {
     this.areaOffsetVertical = 70;
 
     this.areaWidth = this.canvasWidth - (this.areaOffsetVertical * 2);
-    this.areaHeight = this.windowHeight - this.areaOffsetTop - this.areaOffsetBottom;
-
-    if ( (window as any).isSmall ) {
-      this.areaHeight = this.areaHeight * 1.3;
-    }
+    this.areaHeight = ( this.windowHeight - this.areaOffsetTop - this.areaOffsetBottom ) * this.dimensions.size.aspect;
 
     this.areaTop = this.areaOffsetTop;
     this.areaBottom = this.areaOffsetTop + this.areaHeight;

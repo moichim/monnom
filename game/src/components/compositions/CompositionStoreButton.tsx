@@ -6,6 +6,7 @@ import styles from "./CompositionStoreButton.module.scss";
 import 'altcha';
 import { createPortal } from "react-dom";
 import { apiUrl } from "../../utils/assetUrl";
+import { ButtonWithPopover } from "../ui/ButtonWithPopover";
 
 type CompositionClearButtonProps = {
     fn: (name: string, person: string) => void,
@@ -38,8 +39,6 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
     useEffect(() => {
         setMessage(undefined);
     }, [offcanvas.isOpen, setMessage]);
-
-    const [hover, setHover] = useState<boolean>(false);
 
     const container = useMemo(() => {
         const gameRoot = document.getElementById("gameRoot");
@@ -86,26 +85,34 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
 
     return <>
         <div className={styles.composition_close} data-on={props.on} role="button" >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-                onMouseEnter={() => setHover(true)}
-                onMouseLeave={() => setHover(false)} onClick={() => {
+
+            <ButtonWithPopover
+                content={<>Submit your design</>}
+                onClick={()=> {
                     offcanvas.open();
-                    setHover(false);
-                }}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-            </svg>
-            <div className={classNames(hover ? styles.label__on : styles.label__off, styles.label)}>
-                Save your creation
-            </div>
+                }}
+                breakpoint={600}
+                below={{ position: "left", style: { display: "none" } }}
+                above={{ position: "left" }}
+                className={styles.button}
+            >
+                <div className={classNames(styles.label)}>
+                    Submit your design
+                </div>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                    >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+            </ButtonWithPopover>
         </div>
 
-        {props.on && createPortal(<Offcanvas label="Save your composition!" control={offcanvas}>
+        { createPortal(<Offcanvas label="Save your composition!" control={offcanvas}>
 
             {may === false && counter > 0
                 ? <div className={styles.composition_close__wrapper}>

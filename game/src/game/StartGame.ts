@@ -1,5 +1,6 @@
 import { AUTO, Game } from "phaser";
 import { BricksScene } from "./scene/BricksScene";
+import { Sizing } from "../utils/sizing";
 
 
 
@@ -89,35 +90,22 @@ const baseConfig: Phaser.Types.Core.GameConfig = {
 
 const StartGame = (parent: string) => {
 
-  let w = window.innerWidth;
-  let h = window.innerHeight;
-
-  const isSmall = window.innerWidth < 700;
-  if ( isSmall ) {
-    w = w * 1.3;
-    h = h * 1.3;
-  }
-
-  const windowArea = w * h;
-
-  const targetFreeArea = windowArea * 4 / 5;
-  const bricksArea = 1454690 / 3;
-  const totalArea = targetFreeArea + bricksArea;
-
-  const width = w;
-  const height = totalArea / width;
+  const size = Sizing.calculateCanvasDimensions();
 
   const config = {
     ...baseConfig,
-    width: width,
-    height: height
+    width: Math.round(size.width),
+    height: Math.round( size.height )
   };
 
 
   const game = new Game({ ...config, parent });
 
   (window as any).Game = game;
-  (window as any).isSmall = isSmall;
+  (window as any).isSmall = false;
+
+  Sizing.storeGame( game );
+  Sizing.storeCanvasDimensions( size );
 
   return game;
 };

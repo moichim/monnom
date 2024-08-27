@@ -147,7 +147,7 @@ export class CompositionManager {
 
     protected getSceneDimension() {
         const width = this.scene.game.canvas.width;
-        const height = this.scene.game.canvas.height;
+        const height = window.innerHeight;// this.scene.game.canvas.height;
         const diagonal = width + height / 2;
 
         const center = new Phaser.Math.Vector2(
@@ -189,7 +189,13 @@ export class CompositionManager {
             
             if ( brick ) {
 
-                const newPosition = this.dimensions.center.clone().add( brickState.position.relative ).add( new Phaser.Math.Vector2( 0, -1 * this.dimensions.height / 6 ) );
+                const newPosition = this.dimensions.center.clone()
+                    .add( brickState.position.relative )
+                    .add( new Phaser.Math.Vector2( 
+                        0, 
+                        -1 * this.dimensions.height / 7 
+                        ) 
+                    );
 
                 // const newPosition = brickState.position.absolute;
 

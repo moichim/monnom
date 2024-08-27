@@ -14,6 +14,7 @@ import StartGame from "./StartGame";
 import classNames from "classnames";
 import { setLoading } from "../utils/loader";
 import style from "./PhaserGame.module.scss";
+import { Sizing } from "../utils/sizing";
 
 
 
@@ -116,8 +117,10 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
         setOn(false);
 
         timer = setTimeout(() => {
-          destroyScene();
-          startScene();
+          if (Sizing.hasOffcanvasOpen() === false) {
+            destroyScene();
+            startScene();
+          }
         }, 300);
 
       }
