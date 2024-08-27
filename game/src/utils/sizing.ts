@@ -4,7 +4,8 @@ type Size = {
     breakpoint: number,
     aspect: number,
     aspectNegative: number
-    offset: number
+    offset: number,
+    centerAspect: number
 }
 
 export class Sizing {
@@ -16,13 +17,15 @@ export class Sizing {
             breakpoint: 1000,
             aspect: 1.3,
             offset: 100 * 1.3,
-            aspectNegative: 0.75
+            aspectNegative: 0.75,
+            centerAspect: 4.5
         },
         {
             breakpoint: 500,
             aspect: 1.5,
             aspectNegative: 0.6,
-            offset: 100 * 1.5
+            offset: 100 * 1.5,
+            centerAspect: 4
         }
     ]
 
@@ -30,7 +33,8 @@ export class Sizing {
         breakpoint: Infinity,
         aspect: 1,
         offset: 100,
-        aspectNegative: 1
+        aspectNegative: 1,
+        centerAspect: 6
     }
 
     public static getBreakpoint() {

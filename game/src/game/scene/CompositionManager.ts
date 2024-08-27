@@ -4,6 +4,7 @@ import { apiUrl } from "../../utils/assetUrl";
 import { EventBus, GameEvents } from "../EventBus";
 import { Brick, BrickMovements } from "../objects/Brick";
 import { BricksScene } from "./BricksScene";
+import { Sizing } from "../../utils/sizing";
 
 export type CompositionSnapshotType = ReturnType<CompositionManager["getCurrentSceneSnapshot"]>;
 
@@ -147,7 +148,7 @@ export class CompositionManager {
 
     protected getSceneDimension() {
         const width = this.scene.game.canvas.width;
-        const height = window.innerHeight;// this.scene.game.canvas.height;
+        const height = this.scene.game.canvas.height;
         const diagonal = width + height / 2;
 
         const center = new Phaser.Math.Vector2(
@@ -186,6 +187,8 @@ export class CompositionManager {
         snapshot.bricks.forEach( brickState => {
 
             const brick = this.bricks.map.get( brickState.name )
+
+            const {centerAspect} = Sizing.getBreakpoint()
             
             if ( brick ) {
 
@@ -193,7 +196,7 @@ export class CompositionManager {
                     .add( brickState.position.relative )
                     .add( new Phaser.Math.Vector2( 
                         0, 
-                        -1 * this.dimensions.height / 7 
+                        -1 * this.dimensions.height / centerAspect 
                         ) 
                     );
 
