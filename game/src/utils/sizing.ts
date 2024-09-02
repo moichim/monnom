@@ -1,6 +1,7 @@
 import { Game } from "phaser";
 
 type Size = {
+    topOffset: number,
     breakpoint: number,
     aspect: number,
     aspectNegative: number
@@ -14,22 +15,25 @@ export class Sizing {
 
     public static breakpoints: Array<Size> = [
         {
+            topOffset: 100,
             breakpoint: 1000,
             aspect: 1.3,
             offset: 100 * 1.3,
             aspectNegative: 0.75,
-            centerAspect: 4.5
+            centerAspect: 5
         },
         {
+            topOffset: 130,
             breakpoint: 500,
             aspect: 1.5,
             aspectNegative: 0.6,
             offset: 100 * 1.5,
-            centerAspect: 4
+            centerAspect: 5
         }
     ]
 
     public static default: Size = {
+        topOffset: 70,
         breakpoint: Infinity,
         aspect: 1,
         offset: 100,
@@ -50,7 +54,7 @@ export class Sizing {
     }
 
 
-    public static areaOffsetTop = 70;
+    public static areaOffsetTop = Sizing.getBreakpoint().topOffset;
     public static areaOffsetBottom = window.innerHeight * 1/3;
     public static areaOffsetVertical = 70;
 

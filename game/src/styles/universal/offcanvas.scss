@@ -27,7 +27,7 @@
 
 
 
-    @media (min-width: 600px) {
+    @media (min-width: 700px) {
 
         --offcanvas-width: 400px;
     }
@@ -60,6 +60,12 @@
 
 .monnom-offcanvas__full {
     --offcanvas-width: 100vw;
+}
+
+.monnom-offcanvas__half {
+    @media (min-width: 900px) {
+    --offcanvas-width: 50vw;
+    }
 }
 
 .monnom-offcanvas__content {

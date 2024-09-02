@@ -1,3 +1,4 @@
+import { PhysicsParams } from "../../../utils/physics";
 import { Brick } from "../Brick";
 import { AbstractMovement } from "./AbstractMovement";
 import { NaturalMovement } from "./NaturalMovement";
@@ -57,6 +58,7 @@ export class MovementManager {
     }
 
     public fall() {
+        this.brick.setFrictionAir(PhysicsParams.brick.frictionAirOff);
         this.brick.inComposition = false;
         if ( this.movement ) {
             this.movement.stop();
@@ -75,12 +77,15 @@ export class MovementManager {
         this.brick.scene.markAsHasComposition();
         this.brick.setIgnoreGravity( false );
         this.brick.setStatic( true );
+        this.brick.setFrictionAir(PhysicsParams.brick.frictionAirOff);
         // this.brick.setCollisionCategory( this.brick.scene.categories.composition );
         // this.brick.setCollidesWith( Object.values( this.brick.scene.categories ) );
         this._movement = undefined;
     }
 
     public placeInCompositionOrFall() {
+
+        
 
         if ( this.brick.x > this.brick.scene.areaLeft
             && this.brick.x < this.brick.scene.areaRight
@@ -99,6 +104,7 @@ export class MovementManager {
         this.brick.inComposition = false;
         this.brick.setStatic( false );
         this.brick.setIgnoreGravity( true );
+        this.brick.setFrictionAir( PhysicsParams.brick.frictionAir );
     }
 
     public endDragging() {
@@ -116,6 +122,8 @@ export class MovementManager {
         // this.brick.setIgnoreGravity( true );
         // this.brick.setStatic( true );
         // this.atPlace();
+
+        this.brick.setFrictionAir(PhysicsParams.brick.frictionAirOff);
 
         this.placeInCompositionOrFall();
     }

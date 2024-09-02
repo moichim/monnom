@@ -8,7 +8,7 @@ const classClosed = "monnom-offcanvas__close";
 export const createOffcanvas = (
     triggerId: string,
     offcanvasId: string,
-    full: boolean = false
+    className: string = ""
 ) => {
 
     const trigger = document.getElementById( triggerId );
@@ -19,9 +19,7 @@ export const createOffcanvas = (
     }
 
         container.classList.add(
-            full 
-                ? "monnom-offcanvas__full"
-                : "monnom-offcanvas__constrained"
+            className
         );
 
 

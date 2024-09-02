@@ -9,6 +9,7 @@ import { Area } from "../objects/Area";
 import { Ground } from "../objects/Ground";
 import { Wall } from "../objects/Wall";
 import { Sizing } from "../../utils/sizing";
+import { PhysicsParams } from "../../utils/physics";
 
 export enum CompositionState {
   NONE,
@@ -132,6 +133,7 @@ export class BricksScene extends Scene {
     AssetManager.registerToScene(this);
     this.compositions.init();
     this.matter.world.setBounds();
+    this.matter.world.setGravity( 0, PhysicsParams.world.gravity );
 
     // Load body shapes
     this.load.json("shapes", assetUrl("assets/bricks/shapes.json"));
@@ -168,28 +170,6 @@ export class BricksScene extends Scene {
 
   create() {
 
-    /*
-    this.matter.world.addListener( Phaser.Input.Events.POINTER_MOVE, console.log );
-
-    
-
-    const cursor = this.matter.add.sprite( this.canvasWidth / 2, this.windowHeight / 2, "ground" );
-
-    cursor.setStatic( true );
-
-    cursor.setDisplaySize( 10,10 );
-
-    this.canvas.addEventListener( "mousemove", event => {
-
-      console.log( this.isZoomIn, event );
-
-      cursor.setPosition( event.layerX, event.layerY );
-    } );
-
-    this.cursor = cursor;
-
-    */
-
 
     const options = {
       length: 1,
@@ -200,11 +180,7 @@ export class BricksScene extends Scene {
       }
     };
     
-
-
-    
     this.spring = this.matter.add.mouseSpring(options);
-    
 
     this.bg = this.add.rectangle(this.canvasWidth / 2, this.canvasHeight / 2, this.canvasWidth, this.canvasHeight, 0xffffff, 1);
 
@@ -242,16 +218,19 @@ export class BricksScene extends Scene {
   }
 
   shuffle() {
-    const step = this.game.canvas.height / 6;
 
     const lowest = this.bricks.all
-      .filter((brick) => brick.y > step * 4)
-      .sort(() => 0.5 - Math.random());
+      // .filter((brick) => brick.y > step)
+      .sort(() => 0.8 - Math.random());
 
     lowest.forEach((brick) =>
-      brick.applyForce(new Phaser.Math.Vector2(
+      brick.applyForce( ( new Phaser.Math.Vector2(
         (0.5 - Math.random()) * 0.2,
-        -0.9 + ( -0.5 * Math.random() ))
+        -0.9 + ( -0.5 * Math.random() )
+      ) ).multiply( new Phaser.Math.Vector2( 
+        PhysicsParams.game.shuffleAmount,
+        PhysicsParams.game.shuffleAmount 
+      ) )
       )
     );
   }
@@ -284,7 +263,7 @@ export class BricksScene extends Scene {
     this._isZoomIn = true;
     this.canvas.style.scale = this.getTargetScale().toString();
     this.container.style.paddingTop = "50px";
-    this.container.style.backgroundColor = "lightgray";
+    this.container.style.backgroundColor = "#e6e6e6";
     EventBus.emit( GameEvents.ZOOM_STATE, true );
   }
 
@@ -315,7 +294,7 @@ export class BricksScene extends Scene {
     this.canvasHeight = this.game.canvas.height;
     this.windowHeight = window.innerHeight;
 
-    this.areaOffsetTop = 70;
+    this.areaOffsetTop = Sizing.areaOffsetTop;
     this.areaOffsetBottom = this.windowHeight * 1 / 3;
     this.areaOffsetVertical = 70;
 

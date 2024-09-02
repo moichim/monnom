@@ -5,6 +5,7 @@ import { EventBus, GameEvents } from "../EventBus";
 import { Brick, BrickMovements } from "../objects/Brick";
 import { BricksScene } from "./BricksScene";
 import { Sizing } from "../../utils/sizing";
+import { PhysicsParams } from "../../utils/physics";
 
 export type CompositionSnapshotType = ReturnType<CompositionManager["getCurrentSceneSnapshot"]>;
 
@@ -178,12 +179,25 @@ export class CompositionManager {
 
         this.scene.markAsCompNone();
 
-        // Do nothing if snapshot does not exist
+
+        const count = this.scene.bricks.currentlyInComposition.length;
+        const restoreDelay = PhysicsParams.game.restoreDelay;
+        const delay = count > 0
+            ? count > 3 
+                ? count > 5
+                    ? restoreDelay 
+                    : restoreDelay / 3 * 2
+                : restoreDelay / 2
+            : 0;
 
         // All bricks should fall
         this.bricks.all.forEach( brick => brick.fall() );
 
-        // All affected bricks should ho to position
+        
+
+        setTimeout( () => {
+
+            // All affected bricks should ho to position
         snapshot.bricks.forEach( brickState => {
 
             const brick = this.bricks.map.get( brickState.name )
@@ -217,6 +231,12 @@ export class CompositionManager {
             }
 
         } );
+
+
+
+        }, delay );
+
+        
 
     }
 

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { BricksScene } from "../scene/BricksScene";
 import { MovementManager } from "./movements/MovementManager";
+import { PhysicsParams } from "../../utils/physics";
 
 export enum BrickMovements {
   NATURAL = "Natural",
@@ -77,12 +78,13 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       this.scene.categories.composition
     ]);
 
-    this.setBounce( 0.0 );
-    this.setFrictionAir( 0.01 );
-    this.setFrictionStatic( 0.01 );
-    // this.setFriction( 0.01 );
+    this.setBounce( PhysicsParams.brick.bounce );
+    this.setFrictionAir( PhysicsParams.brick.frictionAirOff );
+    this.setFrictionStatic( PhysicsParams.brick.frictionStatic );
+    this.setFriction( PhysicsParams.brick.friction );
 
-    // this.setMass(1000);
+    this.setMass(PhysicsParams.brick.mass);
+    this.setDensity(PhysicsParams.brick.density);
 
     // this.setFriction( 10 );
 

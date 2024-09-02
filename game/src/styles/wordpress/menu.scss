@@ -33,20 +33,52 @@
 }
 
 
-$collapse: 900px;
+$collapse: 550px;
 
 .monnom-header__links {
     position: relative;
     flex-grow: 1;
+
+    height: 0px;
 
     @media (max-width: $collapse ) {
         position: absolute;
         top: 1rem;
         right: 1rem;
         display: flex;
-        flex-direction: column;
+        //flex-direction: column;
         justify-content: flex-end;
-        align-items: flex-end;
+        align-items: flex-start;
+        flex-grow: 1;
+        width: calc( 100vw - 2rem);
+        justify-content: space-between;
+
+        .monnom-header__links__icons {
+            order: 2;
+            display: block;
+            flex-grow: 1;
+            flex-basis: 30%;
+        }
+        .monnom-header__links__menu {
+            order: 3;
+            flex-grow: 1;
+            text-align: right;
+            flex-basis: 30%;
+            height: 0;
+            word-spacing: 30000px; 
+
+            // display: flex;
+            // flex-direction: column;
+            // justify-content: flex-end;
+            //align-items: flex-end;
+            
+            button {
+                text-align: right !important;
+            }
+            a {
+                display: inline-block;
+            }
+        }
 
 
     }
@@ -63,6 +95,74 @@ $collapse: 900px;
     }
 }
 
+.monnom-header__links__part {
+}
+
+.monnom-header__links__menu {
+
+}
+
+.monnom-header__links__icons {
+
+    display: flex;
+    align-items: center;
+
+}
+
+.monnom-header__links__placeholder {
+    content: "";
+    @media ( max-width: $collapse ) {
+        order: 1;
+        flex-grow: 1;
+        flex-basis: 30%;
+    }
+}
+
+
+
+.monnomHeader__social {
+    padding-top: .3rem;
+
+
+    & > * {
+        padding-left: .0rem;
+        padding-right: .0rem;
+    }
+
+    @media ( max-width: $collapse ) {
+        flex-grow: 1;
+        text-align: center;
+        // padding-bottom: .5rem;
+
+        & > * {
+            padding-left: .2rem !important;
+            padding-right: .2rem !important;
+        }
+    }
+
+    @media ( min-width: $collapse ) {
+        padding-right: 1rem;
+    }
+
+    
+}
+
+.monnomHeader__controls {
+    display: flex;
+    align-items: center;
+    button {
+        // height: 1.5rem;
+        transform: translateY(.2rem)
+    }
+    @media ( max-width: $collapse ) {
+        justify-content: center;
+    }
+    @media ( min-width: $collapse ) {
+        padding-left: 1rem;
+    }
+}
+
+
 .monnom-header__link {
     cursor: pointer;
 
@@ -72,6 +172,7 @@ $collapse: 900px;
     font-size: var(--wp--preset--font-size--medium);
     color: var(--wp--preset--color--contrast);
     border-bottom: 0 !important;
+    text-decoration: none !important;
 
     outline: 0;
     margin: 0;
@@ -83,8 +184,8 @@ $collapse: 900px;
 
 
     svg {
-        width: 1.5rem;
-        height: 1.5rem;
+        width: 1.2rem;
+        height: 1.2rem;
     }
 
     &:hover {
@@ -107,8 +208,8 @@ $collapse: 900px;
 
 .monnom-header__logo {
     position: absolute;
-    left: 1rem;
-    top: 1rem;
+    left: 1.2rem;
+    top: 1.23em;
     z-index: 9999 !important;
     color: var(--wp--preset--color--contrast);
     font-family: var(--wp--preset--font-family--relaway);
@@ -123,6 +224,8 @@ $collapse: 900px;
     }
 
     @media (min-width: 680px) {
+        left: 1rem;
+        top: 1rem;
         width: 3.5rem;
     }
 
@@ -152,14 +255,3 @@ $collapse: 900px;
 
 }
 
-.monnomHeader__social {
-    padding-top: .3rem;
-    @media ( max-width: $collapse ) {
-        padding-top: .7rem;
-    }
-
-    & > * {
-        padding-left: .1rem;
-        padding-right: .1rem;
-    }
-}
