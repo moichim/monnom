@@ -11,7 +11,7 @@ type Size = {
 
 export class Sizing {
 
-    public static bricksArea = 1454690 / 3;
+    public static bricksArea = 1454690 / 3  + ( 100000 );
 
     public static breakpoints: Array<Size> = [
         {

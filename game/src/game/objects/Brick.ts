@@ -51,6 +51,8 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
     const shapes = scene.cache.json.get("shapes");
 
+    console.log( shapes );
+
     const shape = shapes[texture] as Phaser.Types.Physics.Matter.MatterBodyConfig;
     shape.density = 1;
     shape.restitution = 1;
@@ -85,6 +87,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
     this.setMass(PhysicsParams.brick.mass);
     this.setDensity(PhysicsParams.brick.density);
+    // this.setScale( 0.5, 0.5 );
 
     // this.setFriction( 10 );
 

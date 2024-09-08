@@ -136,7 +136,7 @@ export class BricksScene extends Scene {
     this.matter.world.setGravity( 0, PhysicsParams.world.gravity );
 
     // Load body shapes
-    this.load.json("shapes", assetUrl("assets/bricks/shapes.json"));
+    this.load.json("shapes", assetUrl("assets/polygons/shapes.json"));
 
     (window as any).Scene = this;
 
@@ -243,17 +243,6 @@ export class BricksScene extends Scene {
     const offset = this.dimensions.size.offset;
 
     const targetSize = (window.innerHeight - offset) / height;
-    /*
-    const height = this.isSmall 
-      ? this.canvasHeight * 0.75
-      : this.canvasHeight;
-
-    const offset = this.isSmall
-      ? 100 * 1.3
-      : 100;
-      */
-
-    console.log( targetSize, this.dimensions );
 
     return targetSize;
 
@@ -378,7 +367,39 @@ export class BricksScene extends Scene {
     const shapes = this.cache.json.get("shapes");
     this.shapes = shapes;
 
+    let from = 1;
+    let to = 33;
+    let square = 200;
+    // let wWidth = window.innerWidth; 
+    let canvasHeight = this.canvasHeight;
 
+    // let row = 0;
+    // let column = 0;
+
+    let maxX = Math.floor( window.innerWidth / square );
+
+    let pointerX = 0;
+    let pointerY = 0;
+
+    for ( let i = from; i <= to; i++ ) {
+
+      const y = canvasHeight - ( pointerY * square ) + ( square / 2 );
+      const x = square * pointerX + ( square / 2 );
+
+      this.addBrick( x, y, i.toString() );
+      
+      if ( pointerX === maxX ) {
+        pointerX = 0;
+        pointerY = pointerY + 1;
+      } else {
+        pointerX = pointerX + 1;
+      }
+
+    }
+
+    console.log( this.bricks );
+
+    /*
     this.addBrick(100, 20, "kostka");
     this.addBrick(200, 20, "kruh");
     this.addBrick(300, 20, "kostka");
@@ -416,6 +437,7 @@ export class BricksScene extends Scene {
     this.addBrick(600, 800, "kostka");
     this.addBrick(700, 800, "polygon");
     this.addBrick(800, 800, "kostka");
+    */
 
     const sum = {
       width: 0,

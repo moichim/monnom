@@ -34,7 +34,8 @@ const getVariableValue = ( variableName: string ) => {
 
 export const assignLink = (
     targetId: string,
-    variableName: string
+    variableName: string,
+    isBlank: boolean = true
 ) => {
 
     const value = getVariableValue( variableName );
@@ -42,7 +43,9 @@ export const assignLink = (
 
     if ( target && value ) {
         target.href = value;
-        target.setAttribute( "target", "_blank" );
+        if ( isBlank ) {
+            target.setAttribute( "target", "_blank" );
+        }
     } else if ( !value ) {
         target.style.display = "none";
     }

@@ -28,6 +28,16 @@ register( "pacman", "assets/bricks/pacman.png" );
 register( "polygon", "assets/bricks/polygon.png" );
 register( "ground", "assets/ground.png" );
 
+let from = 1;
+let to = 33;
+
+for ( let i = from; i <= to; i++ ) {
+    register( 
+        i.toString(),
+        `assets/polygons/${i}.png` 
+    );
+}
+
 export class AssetManager {
 
     static assets = defs;

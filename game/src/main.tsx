@@ -34,7 +34,7 @@ const init = () => {
 
   }
 
-  assignLink( "monnomPortfolioLink", "monnomPortfolio" );
+  assignLink( "monnomPortfolioLink", "monnomPortfolio", false );
   assignLink( "monnomFacebookLink", "monnomFacebook" );
   assignLink( "monnomInstagramLink", "monnomInstagram" );
   assignLink( "monnomLinkedinLink", "monnomLinkedin" );
