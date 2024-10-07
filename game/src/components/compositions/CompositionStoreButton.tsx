@@ -1,11 +1,12 @@
 import classNames from "classnames";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Offcanvas, useOffcanvas } from "../ui/offcanvas";
 import styles from "./CompositionStoreButton.module.scss";
 
-import 'altcha'
-import { apiUrl } from "../../utils/assetUrl";
+import 'altcha';
 import { createPortal } from "react-dom";
+import { apiUrl } from "../../utils/assetUrl";
+import { ButtonWithPopover } from "../ui/ButtonWithPopover";
 
 type CompositionClearButtonProps = {
     fn: (name: string, person: string) => void,
@@ -27,7 +28,7 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
     const [person, setPerson] = useState<string>();
 
     const [may, setMay] = useState<boolean>(false);
-    const [counter, setCounter] = useState<number>( 0 );
+    const [counter, setCounter] = useState<number>(0);
 
     const disabled = useMemo(() => {
 
@@ -39,50 +40,12 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
         setMessage(undefined);
     }, [offcanvas.isOpen, setMessage]);
 
-    const [hover, setHover] = useState<boolean>(false);
-
-    const container = useMemo( () => {
+    const container = useMemo(() => {
         const gameRoot = document.getElementById("gameRoot");
-        if ( ! gameRoot ) throw new Error( "GameRoot not found!" );
+        if (!gameRoot) throw new Error("GameRoot not found!");
         return gameRoot.parentElement;
-    }, [] );
-
-    const widgetRef = useRef<HTMLElement>(null);
-    const formRef = useRef<HTMLFormElement>( null );
-
-    useEffect(() => {
-
-        const {current} = widgetRef;
-
-        const fn = (event: Event) => {
-            event.preventDefault();
-            console.log(event);
-
-        };
-
-        if ( current ) {
-            current.addEventListener( "verified", fn );
-            return current.removeEventListener( "verified", fn );
-        }
-
     }, []);
 
-    useEffect( () => {
-
-        if ( formRef.current ) {
-            const submitHandler = (event: SubmitEvent): void => {
-                console.log( event );
-                event.preventDefault();
-            };
-            formRef.current.addEventListener( "submit", submitHandler );
-            return () => {formRef.current?.removeEventListener( "submit", submitHandler )}
-        }
-
-    }, [] );
-
-
-
-    
 
     const successHandler = () => {
         if (message && person) {
@@ -91,61 +54,65 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
 
             const widgets = document.getElementsByTagName("altcha-widget");
 
-            for ( let widget of widgets ) {
+            for (let widget of widgets) {
                 widget.remove();
             }
 
-            setMay( false );
-            setCounter( 30 );
+            setMay(false);
+            setCounter(30);
 
         }
     };
 
 
-    useEffect( () => {
+    useEffect(() => {
 
-        if ( counter > 0 ) {
-            const timer = setTimeout( () => {
-                setCounter( counter - 1 );
-            }, 1000 );
+        if (counter > 0) {
+            const timer = setTimeout(() => {
+                setCounter(counter - 1);
+            }, 1000);
 
-            return () => { clearTimeout( timer ) }
+            return () => { clearTimeout(timer) }
         } else {
-            setMay( true );
-            setCounter( 0 );
+            setMay(true);
+            setCounter(0);
             setPerson("");
             setMessage("");
         }
 
-    }, [counter] );
-
-    if ( props.on === false ) {
-        return <></>
-    }
+    }, [counter]);
 
 
     return <>
         <div className={styles.composition_close} data-on={props.on} role="button" >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="size-6"
-                onMouseEnter={() => setHover(true)}
-                onMouseLeave={() => setHover(false)} onClick={() => {
+
+            <ButtonWithPopover
+                content={<>Submit your design</>}
+                onClick={()=> {
                     offcanvas.open();
-                    setHover(false);
-                }}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-            </svg>
-            <div className={classNames(hover ? styles.label__on : styles.label__off, styles.label)}>
-                Save your creation
-            </div>
+                }}
+                breakpoint={600}
+                below={{ position: "left", style: { display: "none" } }}
+                above={{ position: "left" }}
+                className={styles.button}
+            >
+                <div className={classNames(styles.label)}>
+                    Submit your design
+                </div>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="size-6"
+                    >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                </svg>
+            </ButtonWithPopover>
         </div>
 
-        {props.on && createPortal( <Offcanvas label="Save your composition!" control={offcanvas}>
+        { createPortal(<Offcanvas label="Save your composition!" control={offcanvas}>
 
             {may === false && counter > 0
                 ? <div className={styles.composition_close__wrapper}>
@@ -164,48 +131,45 @@ export const CompositionStoreButton: React.FC<CompositionClearButtonProps> = pro
                         }}></div>
                     </div>
                 </div>
-                : <form 
-                className={styles.composition_close__wrapper} 
-                ref={formRef} 
-                method="post" 
-                onSubmit={(event) => {
-                    event.preventDefault();
-                    successHandler();
-                }}
-            >
+                : <form
+                    className={styles.composition_close__wrapper}
+                    onSubmit={event => {
+                        event.preventDefault();
+                        successHandler();
+                    }}
+                >
 
-                <div>Send us your creation and share it with other visitors of our site!</div>
+                    <div>Send us your creation and share it with other visitors of our site!</div>
 
-                <input
-                    onChange={event => setMessage(event.target.value)}
-                    placeholder="Your message"
-                    value={message}
-                ></input>
+                    <input
+                        onChange={event => setMessage(event.target.value)}
+                        placeholder="Your message"
+                        value={message}
+                    ></input>
 
-                <input
-                    onChange={event => setPerson(event.target.value)}
-                    placeholder="Your nickname"
-                    value={person}
-                ></input>
+                    <input
+                        onChange={event => setPerson(event.target.value)}
+                        placeholder="Your nickname"
+                        value={person}
+                    ></input>
 
-                <altcha-widget
-                    challengeurl={apiUrl("/wp-json/altcha/v1/challenge")}
-                    floating
-                    ref={widgetRef}
-                    hidefooter
-                    hidelogo
-                ></altcha-widget>
+                    <altcha-widget
+                        challengeurl={apiUrl("/wp-json/altcha/v1/challenge")}
+                        floating
+                        hidefooter
+                        hidelogo
+                    ></altcha-widget>
 
-                <button 
-                    // onClick={successHAndler}
-                    disabled={disabled}
-                    type="submit"
-                >Uložit</button>
+                    <button
+                        // onClick={successHandler}
+                        disabled={disabled}
+                        type="submit"
+                    >Submit</button>
 
-            </form>
+                </form>
             }
 
-        </Offcanvas>, container! )}
+        </Offcanvas>, container!)}
     </>
 
 }

@@ -9,8 +9,8 @@ import { classOpen, createOffcanvas } from './utils/offcanvas.ts'
 
 const init = () => {
 
-  const contact = createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas" );
-  const about = createOffcanvas( "monnomAboutTrigger", "monnomAboutOffcanvas", true );
+  const contact = createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas", "monnom-offcanvas__half" );
+  const about = createOffcanvas( "monnomAboutTrigger", "monnomAboutOffcanvas", "monnom-offcanvas__full" );
 
   const closeAllOffcanvases = () => {
     contact.close();

@@ -42,7 +42,7 @@ function monnom_enqueue_styles()
 			"monnom-game-script",
 			get_stylesheet_directory_uri() . "/game/index.js",
 			[],
-			false,
+			time(),
 			[
 				"in_footer" => true
 			]
@@ -50,7 +50,9 @@ function monnom_enqueue_styles()
 
 		wp_enqueue_style(
 			"monnom-game-style",
-			get_stylesheet_directory_uri() . "/game/index.css"
+			get_stylesheet_directory_uri() . "/game/index.css",
+			[],
+			time()
 		);
 	}
 }

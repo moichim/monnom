@@ -9,5 +9,6 @@ export enum GameEvents {
     HAS_COMPOSITION = "has-composition",
     COMPS_LOADED = "compositions-restored",
     COMP_CHANGED = "composition-changed",
-    COMP_STATE = "composition-state"
+    COMP_STATE = "composition-state",
+    ZOOM_STATE = "zoom-state-changed"
 }

@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import { BricksScene } from "../scene/BricksScene";
 import { MovementManager } from "./movements/MovementManager";
+import { PhysicsParams } from "../../utils/physics";
 
 export enum BrickMovements {
   NATURAL = "Natural",
@@ -29,6 +30,8 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
   protected set isDragging(value: boolean) {
     this._isDragging = value;
   }
+
+  protected spring?: MatterJS.ConstraintType;
 
 
   protected fx?: Phaser.FX.Bloom;
@@ -63,11 +66,27 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       frame,
       {
         ...options,
-        // chamfer: 16, 
+        chamfer: 16,
         shape: shape as Phaser.Types.Physics.Matter.MatterSetBodyConfig
       });
 
     this.name = name;
+    this.setCollisionCategory(this.scene.categories.base);
+    this.setCollisionGroup(this.scene.categories.base);
+    this.setCollidesWith([
+      this.scene.categories.base,
+      this.scene.categories.composition
+    ]);
+
+    this.setBounce( PhysicsParams.brick.bounce );
+    this.setFrictionAir( PhysicsParams.brick.frictionAirOff );
+    this.setFrictionStatic( PhysicsParams.brick.frictionStatic );
+    this.setFriction( PhysicsParams.brick.friction );
+
+    this.setMass(PhysicsParams.brick.mass);
+    this.setDensity(PhysicsParams.brick.density);
+
+    // this.setFriction( 10 );
 
     this.on(
       Phaser.Input.Events.POINTER_MOVE,
@@ -96,12 +115,35 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
       Phaser.Input.Events.POINTER_DOWN,
       (context: Brick) => {
         context;
-        this.isDragging = true;
-        this.scene.area.setOn();
-        this.movement.startDragging();
-        this.scene.startDragging();
-        this.scene.markAsCompositionChanged();
-        this.scene.game.canvas.style.cursor = "pointer";
+        if (this.active) {
+          this.isDragging = true;
+          this.scene.area.setOn();
+          this.movement.startDragging();
+          this.scene.startDragging();
+          this.scene.markAsCompositionChanged();
+          this.scene.game.canvas.style.cursor = "pointer";
+
+          /*
+          
+          this.spring = this.scene.matter.add.mouseSpring({
+            bodyA: this.body as BodyType,
+            bodyB: this.scene.cursor.body as BodyType,
+            length: 1,
+      stiffness: 0.1,
+          });
+
+          */
+
+
+
+
+          // this.scene.matter.body.setCentre( this.body, new Phaser.Math.Vector2( this.input?.localX,this.input?.localY ), true );
+
+          // this.setOrigin(0,0);
+
+          // console.log( this.centerOfMass, this.input?.localX, this.input?.localY, this.displayWidth, this.displayHeight );
+          // this.centerOfMass();
+        }
       },
       this
     );
@@ -116,6 +158,8 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
         this.movement.endDragging();
         this.scene.area.setOff();
         this.scene.endDragging();
+
+        // this.scene.matter.world.removeConstraint( this.spring! );
       },
       this
     );
