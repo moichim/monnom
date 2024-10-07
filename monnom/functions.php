@@ -7,13 +7,24 @@
  *
  * @package monnom
  */
+
 require_once( "lib/tgmpa.php" );
 require_once( "lib/options.php" );
+require_once( "lib/blocks/blocks.php" );
+
+require_once( "lib/layout.php" );
+
+
 
 
 function is_monnom()
 {
-	// return is_page_template( "game" )
+
+	if ( !is_page() ) {
+		return false;
+	} else {
+		return is_page_template( "game" );
+	}
 	return true;
 }
 
@@ -24,6 +35,17 @@ add_action('wp_enqueue_scripts', 'monnom_enqueue_styles');
  */
 function monnom_enqueue_styles()
 {
+
+	$css = '
+        body {
+            background-color: yellow !important;
+			min-height: 100vh;
+			box-sizing: border-box;
+        }';
+
+		wp_register_style( 'dma-inline-style', false );
+    wp_enqueue_style( 'dma-inline-style' );
+    wp_add_inline_style( 'dma-inline-style', $css );
 
 	wp_enqueue_style(
 		'twentytwentyfour-style',
@@ -36,17 +58,17 @@ function monnom_enqueue_styles()
 		['twentytwentyfour-style']
 	);
 
-	if (is_monnom()) {
+	wp_enqueue_script(
+		"monnom-game-script",
+		get_stylesheet_directory_uri() . "/game/index.js",
+		[],
+		time(),
+		[
+			"in_footer" => true
+		]
+	);
 
-		wp_enqueue_script(
-			"monnom-game-script",
-			get_stylesheet_directory_uri() . "/game/index.js",
-			[],
-			time(),
-			[
-				"in_footer" => true
-			]
-		);
+	if (is_monnom()) {
 
 		wp_enqueue_style(
 			"monnom-game-style",

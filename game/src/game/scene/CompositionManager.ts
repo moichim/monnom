@@ -177,6 +177,8 @@ export class CompositionManager {
 
     public restoreSnapshot( snapshot: CompositionSnapshotType, mode: BrickMovements ) {
 
+        console.log( "restoring", snapshot );
+
         this.scene.markAsCompNone();
 
 

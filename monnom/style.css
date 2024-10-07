@@ -19,3 +19,110 @@ Version:        0.1.0
 #contactDialog {
     display: none;
 }
+
+body:not(.page-template-game) .wp-site-blocks {
+
+    /* min-height: 100vh; */
+
+}
+
+
+body:not(.page-template-game) .monnom-header__logo {
+    position: absolute;
+    left: 1.2rem;
+    top: 1.23em;
+    z-index: 9999 !important;
+    color: var(--wp--preset--color--contrast);
+    font-family: var(--wp--preset--font-family--relaway);
+    cursor: pointer;
+
+    width: 3rem;
+}
+
+body:not(.page-template-game) .monnom-header__logo svg {
+    z-index: 9999 important;
+    color: var( --wp--preset--color--black );
+    transition: color .3s ease-in-out;
+}
+
+body:not(.page-template-game) .monnom-header__logo svg:hover {
+    color: var( --wp--preset--color--black );
+}
+
+@media (min-width: 680px) {
+    body:not(.page-template-game) .monnom-header__logo svg {
+
+        left: 1rem;
+        top: 1rem;
+        width: 3.5rem;
+
+    }
+}
+
+@media (min-width: 1200px) {
+    body:not(.page-template-game) .monnom-header__logo svg {
+        width: 4rem;
+    }
+}
+
+body:not(.page-template-game) .monnom-header__backlink {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
+
+body:not(.page-template-game) .monnom-header__backlink button {
+    scale: 2;
+    translate: -1rem 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    border: 0;
+}
+
+body:not(.page-template-game) .monnom-header__backdrop {
+    height: 5.5rem;
+}
+
+body:not(.page-template-game) .wp-site-blocks {
+    min-height: calc( 100vh - 5.5rem );
+}
+
+@media (min-width: 1200px) {
+
+    body:not(.page-template-game) .monnom-header__backdrop {
+        height: 6.5rem;
+    }
+
+    body:not(.page-template-game) .wp-site-blocks {
+        min-height: calc( 100vh - 6.5rem );
+    }
+
+}
+
+.monnom-footer {
+
+    padding: 1rem;
+    background: black;
+    color: yellow;
+
+    position: relative;
+    bottom: 0;
+
+    overflow: hidden;
+
+}
+
+.monnom-footer__wrapper {
+    position: sticky;
+    bottom: 0;
+}
+
+.monnom-footer svg {
+    color: blue;
+    width: 3.5rem;
+}
+
+body.page-template-game {
+    background-color: white !important;
+}

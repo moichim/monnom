@@ -81,7 +81,7 @@ export const Controller: React.FC = () => {
       {createPortal(<>
 
           <ButtonWithPopover
-            content={<>Gallery of user designs</>}
+            content={<>Gallery</>}
             onClick={() => { compositionsOffcanvas.open() }}
             breakpoint={550}
             className="monnom-header__link"
@@ -99,7 +99,7 @@ export const Controller: React.FC = () => {
           </ButtonWithPopover>
 
           <ButtonWithPopover
-            content={<>Shuffle the bricks</>}
+            content={<>Shuffle</>}
             onClick={() => { shuffle() }}
             className="monnom-header__link"
             breakpoint={550}

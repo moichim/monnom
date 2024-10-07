@@ -163,7 +163,7 @@
 					"slug": "base-2"
 				},
 				{
-					"color": "#111111",
+					"color": "#000000",
 					"name": "Contrast",
 					"slug": "contrast"
 				},
@@ -178,7 +178,7 @@
 					"slug": "contrast-3"
 				},
 				{
-					"color": "#cfcabe",
+					"color": "#0000ff",
 					"name": "Accent",
 					"slug": "accent"
 				},
