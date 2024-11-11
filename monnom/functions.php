@@ -13,7 +13,22 @@ require_once( "lib/options.php" );
 
 function is_monnom()
 {
-	// return is_page_template( "game" )
+
+	if ( is_page() ) {
+
+		$slug = get_page_template_slug();
+
+		return $slug === "game";
+
+	} else {
+		return false;
+	}
+
+	
+
+
+
+	// return is_page_template( "game.html" )
 	return true;
 }
 
@@ -167,3 +182,10 @@ add_action('rest_api_init', function () {
 		'callback' => 'list_compositions',
 	));
 });
+
+function header_notification()
+{   
+    echo '<div><strong>Any html goes here</strong></div>';
+    
+}
+add_action('wp_head', 'header_notification');
