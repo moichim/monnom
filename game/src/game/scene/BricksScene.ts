@@ -204,8 +204,26 @@ export class BricksScene extends Scene {
     EventBus.emit("current-scene-ready", this);
   }
 
+
+  protected innerRegistry: Map<string,number> = new Map;
+
+  destroy() {
+    this.innerRegistry.clear();
+  }
+
+
   addBrick(x: number, y: number, textureId: string) {
-    this.bricks.add(`brick-${x}-${y}`, x, y, textureId);
+
+    let index = 0;
+
+    if ( this.innerRegistry.has( textureId ) ) {
+      index = this.innerRegistry.get( textureId )!;
+      this.innerRegistry.set( textureId, index + 1 );
+    } else {
+      this.innerRegistry.set( textureId, 1 );
+    }
+
+    this.bricks.add(`brick-${textureId}-${index}`, x, y, textureId);
   }
 
   fall() {
@@ -368,7 +386,7 @@ export class BricksScene extends Scene {
     this.shapes = shapes;
 
     let from = 1;
-    let to = 33;
+    let to = 35;
     let square = 200;
     // let wWidth = window.innerWidth; 
     let canvasHeight = this.canvasHeight;
@@ -381,7 +399,16 @@ export class BricksScene extends Scene {
     let pointerX = 0;
     let pointerY = 0;
 
+    const numbers: number[] = [];
     for ( let i = from; i <= to; i++ ) {
+      numbers.push( i );
+    }
+
+    numbers.sort( () => Math.random() - .5 );
+
+    for ( let i of numbers ) {
+
+    // for ( let i = from; i <= to; i++ ) {
 
       const y = canvasHeight - ( pointerY * square ) + ( square / 2 );
       const x = square * pointerX + ( square / 2 );

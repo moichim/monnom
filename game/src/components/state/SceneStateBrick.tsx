@@ -32,26 +32,24 @@ export const SceneStateBrick: React.FC<SceneStateBrickProps> = (props) => {
     return props.height * props.originY
   }, [] );
 
+  console.log( props );
+
   return (
 
     <g
-      transform={`translate( ${x} ${y} ) `}
-      transform-origin={"center center"}
+      transform={`translate( ${x} ${y} )`}
+      transform-origin={
+        "center center"
+      }
     >
       <image
         href={url}
-        // x={props.position.absolute.x}
-        // y={props.position.absolute.y}
-        /*
-        transform={` 
-        scale( ${props.scale} ${props.scale} ) 
-        rotate( ${props.angle}, ${props.width}, ${props.height} ) `}
-        */
-       transform={`rotate( ${props.angle} ${rotateCenterX } ${rotateCenterY} )`}
+       transform={`rotate( ${props.angle} ${rotateCenterX } ${rotateCenterX} )`}
+       
        stroke="black"
        strokeWidth={4}
        rotate={"300"}
-       scale={2}
+       scale={1}
         style={
           {
             // transformOrigin: "50% 50%",

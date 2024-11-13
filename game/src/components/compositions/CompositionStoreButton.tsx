@@ -3,10 +3,11 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Offcanvas, useOffcanvas } from "../ui/offcanvas";
 import styles from "./CompositionStoreButton.module.scss";
 
-import 'altcha';
 import { createPortal } from "react-dom";
 import { apiUrl } from "../../utils/assetUrl";
 import { ButtonWithPopover } from "../ui/ButtonWithPopover";
+
+import "altcha";
 
 type CompositionClearButtonProps = {
     fn: (name: string, person: string) => void,

@@ -18,18 +18,10 @@ const register = (
     } );
 }
 
-// 
-register( "kostka", "assets/bricks/kostka.png" );
-register( "kruh", "assets/bricks/kruh.png" );
-register( "lichobeznik", "assets/bricks/lichobeznik.png" );
-register( "line", "assets/bricks/line.png" );
-register( "obdelnik", "assets/bricks/obdelnik.png" );
-register( "pacman", "assets/bricks/pacman.png" );
-register( "polygon", "assets/bricks/polygon.png" );
 register( "ground", "assets/ground.png" );
 
 let from = 1;
-let to = 33;
+let to = 35;
 
 for ( let i = from; i <= to; i++ ) {
     register( 

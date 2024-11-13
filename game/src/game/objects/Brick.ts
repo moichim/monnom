@@ -51,8 +51,6 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
     const shapes = scene.cache.json.get("shapes");
 
-    console.log( shapes );
-
     const shape = shapes[texture] as Phaser.Types.Physics.Matter.MatterBodyConfig;
     shape.density = 1;
     shape.restitution = 1;
@@ -87,6 +85,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
     this.setMass(PhysicsParams.brick.mass);
     this.setDensity(PhysicsParams.brick.density);
+    this.setScale( PhysicsParams.brick.scale, PhysicsParams.brick.scale );
     // this.setScale( 0.5, 0.5 );
 
     // this.setFriction( 10 );
@@ -125,27 +124,6 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
           this.scene.startDragging();
           this.scene.markAsCompositionChanged();
           this.scene.game.canvas.style.cursor = "pointer";
-
-          /*
-          
-          this.spring = this.scene.matter.add.mouseSpring({
-            bodyA: this.body as BodyType,
-            bodyB: this.scene.cursor.body as BodyType,
-            length: 1,
-      stiffness: 0.1,
-          });
-
-          */
-
-
-
-
-          // this.scene.matter.body.setCentre( this.body, new Phaser.Math.Vector2( this.input?.localX,this.input?.localY ), true );
-
-          // this.setOrigin(0,0);
-
-          // console.log( this.centerOfMass, this.input?.localX, this.input?.localY, this.displayWidth, this.displayHeight );
-          // this.centerOfMass();
         }
       },
       this

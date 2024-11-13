@@ -24,11 +24,6 @@ function is_monnom()
 		return false;
 	}
 
-	
-
-
-
-	// return is_page_template( "game.html" )
 	return true;
 }
 

@@ -1,5 +1,6 @@
 export const PhysicsParams = {
     brick: {
+        scale: .5,
         mass: 1000,
         density: 100,
         bounce: 0.1,
