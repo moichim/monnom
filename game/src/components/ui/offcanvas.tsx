@@ -1,16 +1,22 @@
 import classNames from "classnames";
 import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
+import { BricksScene } from "../../game/scene/BricksScene";
+import { Sizing } from "../../utils/sizing";
 
 export const useOffcanvas = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const open = useCallback(() => {
         setIsOpen(true);
+        ( (window as any).Scene as BricksScene ).deactivateElements();
+        Sizing.setOffcanvasOpen( true );
     }, [setIsOpen]);
 
     const close = useCallback(() => {
         setIsOpen(false);
+        ( (window as any).Scene as BricksScene ).activateElements();
+        Sizing.setOffcanvasOpen( false );
     }, [setIsOpen]);
 
     return {

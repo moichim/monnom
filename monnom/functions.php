@@ -13,7 +13,17 @@ require_once( "lib/options.php" );
 
 function is_monnom()
 {
-	// return is_page_template( "game" )
+
+	if ( is_page() ) {
+
+		$slug = get_page_template_slug();
+
+		return $slug === "game";
+
+	} else {
+		return false;
+	}
+
 	return true;
 }
 
@@ -42,7 +52,7 @@ function monnom_enqueue_styles()
 			"monnom-game-script",
 			get_stylesheet_directory_uri() . "/game/index.js",
 			[],
-			false,
+			time(),
 			[
 				"in_footer" => true
 			]
@@ -50,7 +60,9 @@ function monnom_enqueue_styles()
 
 		wp_enqueue_style(
 			"monnom-game-style",
-			get_stylesheet_directory_uri() . "/game/index.css"
+			get_stylesheet_directory_uri() . "/game/index.css",
+			[],
+			time()
 		);
 	}
 }
