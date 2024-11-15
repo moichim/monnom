@@ -78,13 +78,9 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(
     // Initial game start
     useLayoutEffect(() => {
 
-      console.log( "Prvotní načtení" );
-
       startScene();
 
       EventBus.on("current-scene-ready", () => {
-
-        console.log( "scéna je ready" );
 
         // Set this layout as ON
         setOn(true);

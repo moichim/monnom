@@ -177,10 +177,3 @@ add_action('rest_api_init', function () {
 		'callback' => 'list_compositions',
 	));
 });
-
-function header_notification()
-{   
-    echo '<div><strong>Any html goes here</strong></div>';
-    
-}
-add_action('wp_head', 'header_notification');

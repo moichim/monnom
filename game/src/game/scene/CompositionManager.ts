@@ -202,7 +202,7 @@ export class CompositionManager {
             // All affected bricks should ho to position
             snapshot.bricks.forEach(brickState => {
 
-                console.log( brickState );
+                console.log( "brick state", brickState );
 
                 const brick = this.bricks.map.get(brickState.name)
 

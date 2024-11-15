@@ -32,8 +32,6 @@ export const SceneStateBrick: React.FC<SceneStateBrickProps> = (props) => {
     return props.height * props.originY
   }, [] );
 
-  console.log( props );
-
   return (
 
     <g
@@ -44,7 +42,7 @@ export const SceneStateBrick: React.FC<SceneStateBrickProps> = (props) => {
     >
       <image
         href={url}
-       transform={`rotate( ${props.angle} ${rotateCenterX } ${rotateCenterX} )`}
+       transform={`rotate( ${props.angle} ${rotateCenterX} ${rotateCenterY} )`}
        
        stroke="black"
        strokeWidth={4}

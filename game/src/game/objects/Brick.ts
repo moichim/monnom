@@ -85,7 +85,7 @@ export class Brick extends Phaser.Physics.Matter.Sprite {
 
     this.setMass(PhysicsParams.brick.mass);
     this.setDensity(PhysicsParams.brick.density);
-    this.setScale( PhysicsParams.brick.scale, PhysicsParams.brick.scale );
+    // this.setScale( PhysicsParams.brick.scale, PhysicsParams.brick.scale );
     // this.setScale( 0.5, 0.5 );
 
     // this.setFriction( 10 );
