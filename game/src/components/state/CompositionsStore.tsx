@@ -19,8 +19,8 @@ export const CompositionStore: React.FC<CompositionStoreProps> = props => {
     const aspect = Sizing.calculateCanvasDimensions().size.aspect;
 
     return props.compositions.filter(composition => {
-      return composition.dimension.composition.width < ((width * aspect) - 100)
-        && composition.dimension.composition.height < ((height * aspect) - 100)
+      return composition.dimension.composition.width < ((width * aspect) - 200)
+        && composition.dimension.composition.height < ((height * aspect) - 200)
       // && composition.dimension.composition.width > ( width - 200 )
       // && composition.dimension.composition.height > ( height - 200 )
     })
