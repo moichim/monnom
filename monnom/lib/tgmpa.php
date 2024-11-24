@@ -72,7 +72,14 @@ function monnom_register_required_plugins() {
 			"slug" => "altcha-spam-protection",
 			"required" => true,
 			"force_activation" => true
-		)
+		),
+
+		array(
+			"name" => "Custom Blocks Constructor – Lazy Blocks",
+			"slug" => "lazy-blocks",
+			"required" => true,
+			"force_activation" => true
+		),
 
 	);
 

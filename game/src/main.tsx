@@ -5,21 +5,22 @@ import './index.scss'
 import { isDev } from './utils/assetUrl.ts'
 import { prepareBody } from './utils/devTemplateLoad.ts'
 import { assignLink } from './utils/links.ts'
-import { classOpen, createOffcanvas } from './utils/offcanvas.ts'
 
 const init = () => {
 
-  const contact = createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas", "monnom-offcanvas__half" );
-  const about = createOffcanvas( "monnomAboutTrigger", "monnomAboutOffcanvas", "monnom-offcanvas__full" );
+  // const contact = createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas", "monnom-offcanvas__half" );
+  // const about = createOffcanvas( "monnomAboutTrigger", "monnomAboutOffcanvas", "monnom-offcanvas__full" );
 
+  /*
   const closeAllOffcanvases = () => {
     contact.close();
     about.close();
   }
+  */
 
-  const logos = document.getElementsByClassName( "monnom-header__logo" );
+  // const logos = document.getElementsByClassName( "monnom-header__logo" );
 
-
+/*
   for ( let logo of logos ) {
 
     logo.addEventListener( "click", () => {
@@ -33,8 +34,9 @@ const init = () => {
     } );
 
   }
+    */
 
-  assignLink( "monnomPortfolioLink", "monnomPortfolio", false );
+  // assignLink( "monnomPortfolioLink", "monnomPortfolio", false );
   assignLink( "monnomFacebookLink", "monnomFacebook" );
   assignLink( "monnomInstagramLink", "monnomInstagram" );
   assignLink( "monnomLinkedinLink", "monnomLinkedin" );
@@ -52,15 +54,14 @@ const init = () => {
   )
 }
 
+// React dev server needs to fetch the template file first and then it needs to initialise
 if (isDev) {
-
-  // Fetch the template, prepare the body and after that, init React
   prepareBody()
     .then(() => init());
 
-} else {
-
-  // Init right now
+} 
+// If not dev server, initialise right now only on pages with game peage tempalte
+else if ( document.body.classList.contains( "page-template-game" ) ) {
   init();
 
 }

@@ -7,23 +7,21 @@
  *
  * @package monnom
  */
-require_once( "lib/tgmpa.php" );
-require_once( "lib/options.php" );
+require_once("lib/tgmpa.php");
+require_once("lib/options.php");
+require_once("lib/layout.php");
+require_once("lib/blocks/blocks.php");
+
 
 
 function is_monnom()
 {
 
-	if ( is_page() ) {
-
-		$slug = get_page_template_slug();
-
-		return $slug === "game";
-
-	} else {
+	if (!is_page()) {
 		return false;
+	} else {
+		return is_page_template("game");
 	}
-
 	return true;
 }
 
@@ -34,6 +32,17 @@ add_action('wp_enqueue_scripts', 'monnom_enqueue_styles');
  */
 function monnom_enqueue_styles()
 {
+
+	$css = '
+        body {
+            background-color: yellow !important;
+			min-height: 100vh;
+			box-sizing: border-box;
+        }';
+
+	wp_register_style('dma-inline-style', false);
+	wp_enqueue_style('dma-inline-style');
+	wp_add_inline_style('dma-inline-style', $css);
 
 	wp_enqueue_style(
 		'twentytwentyfour-style',
@@ -133,36 +142,33 @@ function store_composition(WP_REST_Request $data)
 function list_compositions(WP_REST_Request $data)
 {
 
-	$compositions = get_posts( [
+	$compositions = get_posts([
 		"post_type" => "composition",
 		"post_status" => "publish",
 		"orderby" => "date",
 		"order" => "DESC",
 		"posts_per_page" => 30
-	] );
+	]);
 
-	if ( $compositions ) {
+	if ($compositions) {
 
 		$result = [];
 
-		foreach ( $compositions as $composition ) {
-			$result[] = json_decode( $composition->post_content );
+		foreach ($compositions as $composition) {
+			$result[] = json_decode($composition->post_content);
 		}
 
 		return new WP_REST_RESPONSE([
 			"message" => "The following compositions were found",
 			"data" => $result
 		], 200);
-
 	} else {
 
 		return new WP_REST_RESPONSE([
 			"message" => "No compositions found",
 			"data" => []
 		], 200);
-
 	}
-
 }
 
 add_action('rest_api_init', function () {

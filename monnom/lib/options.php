@@ -1,4 +1,7 @@
 <?php
+
+$monnom_menu_count = 5;
+
 /**
  * This snippet has been updated to reflect the official supporting of options pages by CMB2
  * in version 2.2.5.
@@ -25,7 +28,7 @@ function monnom_options_page() {
 		 * Several of these parameters are passed along to add_menu_page()/add_submenu_page().
 		 */
 
-		'option_key'      => 'myprefix_options', // The option key and admin menu page slug.
+		'option_key'      => 'monnom_theme_options', // The option key and admin menu page slug.
 		// 'icon_url'        => 'dashicons-palmtree', // Menu icon. Only applicable if 'parent_slug' is left empty.
 		// 'menu_title'      => esc_html__( 'Options', 'myprefix' ), // Falls back to 'title' (above).
 		// 'parent_slug'     => 'themes.php', // Make options page a submenu item of the themes menu.
@@ -84,6 +87,23 @@ function monnom_options_page() {
 		'type' => 'text_url',
 	) );
 
+	
+	for ( $i = 1; $i <= 5; $i++ ) {
+
+		$cmb_options->add_field( array(
+			"name" => "Menu link " . $i . " URL",
+			"id" => "menu_" . $i,
+			"type" => "text_url"
+		) );
+
+		$cmb_options->add_field( array(
+			"name" => "Menu link " . $i . " title",
+			"id" => "menu_" . $i . "_title",
+			"type" => "text",
+			"description" => "Both the link and the title need to be set in order to display the menu item."
+		) );
+	}
+
 }
 
 /**
@@ -93,14 +113,14 @@ function monnom_options_page() {
  * @param  mixed  $default Optional default value
  * @return mixed           Option value
  */
-function myprefix_get_option( $key = '', $default = false ) {
+function monnom_get_option( $key = '', $default = false ) {
 	if ( function_exists( 'cmb2_get_option' ) ) {
 		// Use cmb2_get_option as it passes through some key filters.
-		return cmb2_get_option( 'myprefix_options', $key, $default );
+		return cmb2_get_option( 'monnom_theme_options', $key, $default );
 	}
 
 	// Fallback to get_option if CMB2 is not loaded yet.
-	$opts = get_option( 'myprefix_options', $default );
+	$opts = get_option( 'monnom_theme_options', $default );
 
 	$val = $default;
 
@@ -112,6 +132,88 @@ function myprefix_get_option( $key = '', $default = false ) {
 
 	return $val;
 }
+
+/** Get menu items */
+function monnom_get_menu_data() {
+
+	$base_url = home_url();
+
+	$data = [];
+	for ( $i = 1; $i <= 5; $i++ ) {
+		$d = monnom_get_option( "menu_" . $i );
+		$t = monnom_get_option( "menu_" . $i . "_title" );
+		if ( $d && $t) {
+			array_push( $data, [
+				"link" => $d,
+				"title" => $t,
+				"is_blank" => ! str_contains( $d, $base_url )
+			] );
+		}
+	}
+	return $data;
+
+}
+
+
+function print_monnom_frontpage_menu() {
+
+	if ( ! is_monnom() ) {
+		return;
+	}
+
+	$links = monnom_get_menu_data();
+
+	array_walk( $links, function( $item ) {
+
+		?>
+
+		<a href="<?= $item["link"]?>" class="monnom-header__link" <?= $item["is_blank"] === true ? "target='_blank'" : ""?>>
+			<?= $item["title"]?>
+		</a>
+
+		<?php
+
+	} );
+
+}
+
+function print_monnom_footer_menu() {
+
+	if ( is_monnom() ) {
+		return;
+	}
+
+	$links = monnom_get_menu_data();
+
+	array_walk( $links, function( $item ) {
+
+		?>
+
+		<a href="<?= $item["link"]?>" <?= $item["is_blank"] === true ? "target='_blank'" : ""?>>
+			<?= $item["title"]?>
+		</a>
+
+		<?php
+
+	} );
+
+}
+
+
+/*
+function monnom_get_footer() {
+
+	if ( is_monnom() ) {
+		return "";
+	}
+
+	else {
+		return false;
+	}
+
+}
+
+*/
 
 
 // inline script via wp_print_scripts
@@ -127,22 +229,22 @@ function shapeSpace_print_scripts() {
         /** These links are asigned to <a>'s by JS code */
 
         window.monnomPortfolio = <?php 
-            $value = myprefix_get_option( "portfolio" );
+            $value = monnom_get_option( "portfolio" );
             print( $value ? "\"" . $value . "\"" : "undefined" );
         ?>;
 
         window.monnomFacebook = <?php 
-            $value = myprefix_get_option( "facebook" );
+            $value = monnom_get_option( "facebook" );
             print( $value ? "\"" . $value . "\"" : "undefined" );
         ?>;
 
         window.monnomInstagram = <?php 
-            $value = myprefix_get_option( "instagram" );
+            $value = monnom_get_option( "instagram" );
             print( $value ? "\"" . $value . "\"" : "undefined" );
         ?>;
 
         window.monnomLinkedin = <?php 
-            $value = myprefix_get_option( "linkedin" );
+            $value = monnom_get_option( "linkedin" );
             print( $value ? "\"" . $value . "\"" : "undefined" );
         ?>;
 
