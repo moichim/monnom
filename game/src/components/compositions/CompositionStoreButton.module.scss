@@ -69,7 +69,7 @@ $collapse-width: 600px;
 
     textarea,
     input {
-        background: yellow;
+        background: var(--wp--preset--color--accent-5);
         border-bottom: black 2px solid;
         color: black;
         &:focus {
@@ -98,7 +98,7 @@ $collapse-width: 600px;
     }
 
     button[disabled] {
-        background: yellow !important;
+        background: var(--wp--preset--color--accent-5) !important;
         
         cursor: not-allowed;
     }

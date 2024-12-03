@@ -34,6 +34,22 @@
     </article>
 </aside>
 
+
+<aside id="monnomPortfolioOffcanvas" class="monnom-offcanvas monnom-offcanvas__close" aria-hidden="true">
+    <div class="monnom-offcanvas__backdrop"></div>
+    <article class="monnom-offcanvas__content">
+
+        <header class="monnom-offcanvas__content__header">
+            <div></div><button>×</button>
+        </header>
+        <main class="monnom-offcanvas__content__scroller">
+            <!-- wp:template-part {"slug":"book-modal"} /-->
+        </main>
+
+    </article>
+</aside>
+
+
 <div id="monnomLoader" class="monnom-context monnom-loader monnom-loader__loading monnom-loader__inPlace" aria-hidden>
     <div>Loading...</div>
 </div>
@@ -76,22 +92,17 @@
             </svg>
         </div>
 
-
-
         <nav id="monnomHeader_links" class="monnom-header__links">
+
             <div class="monnom-header__links__part monnom-header__links__menu">
-                <a id="monnomPortfolioLink" class="monnom-header__link" download>Projects</a>
+                <button id="monnomPortfolioTrigger" class="monnom-header__link">Projects</button>
                 <button id="monnomAboutTrigger" class="monnom-header__link">About</button>
                 <button id="monnomContactTrigger" class="monnom-header__link">Contact</button>
-                
-
             </div>
 
             <div class="monnom-header__links__placeholder"></div>
 
             <div class="monnom-header__links__part monnom-header__links__icons">
-
-                
 
                 <div class="monnomHeader__social">
                     <a id="monnomFacebookLink" href="" class="monnom-header__link monnom-header__icon"

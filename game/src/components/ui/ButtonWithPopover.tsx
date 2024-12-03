@@ -56,7 +56,7 @@ export const ButtonWithPopover: React.FC<ButtonWithPopoverProps> = props => {
               position={position}
               childRect={childRect}
               popoverRect={popoverRect}
-              arrowColor={'yellow'}
+              arrowColor={'var(--wp--preset--color--accent-5)'}
               arrowSize={10}
               arrowStyle={{ opacity: 1 }}
               className='popover-arrow-container'

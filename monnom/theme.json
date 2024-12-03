@@ -193,6 +193,11 @@
 					"slug": "accent-3"
 				},
 				{
+					"color": "#ffff00",
+					"name": "Highlight",
+					"slug": "monnom-highlight"
+				},
+				{
 					"color": "#b1c5a4",
 					"name": "Accent / Four",
 					"slug": "accent-4"

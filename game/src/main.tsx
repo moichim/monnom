@@ -7,14 +7,27 @@ import { prepareBody } from './utils/devTemplateLoad.ts'
 import { assignLink } from './utils/links.ts'
 import { classOpen, createOffcanvas } from './utils/offcanvas.ts'
 
+
 const init = () => {
 
+  const portfolio = createOffcanvas( "monnomPortfolioTrigger", "monnomPortfolioOffcanvas", "monnom-offcanvas__full" );
   const contact = createOffcanvas( "monnomContactTrigger", "monnomContactOffcanvas", "monnom-offcanvas__half" );
   const about = createOffcanvas( "monnomAboutTrigger", "monnomAboutOffcanvas", "monnom-offcanvas__full" );
+
+  const evilButtons = document.querySelectorAll( ".evilModal" );
+
+  evilButtons.forEach( button => {
+    button.addEventListener( "click", () => {
+      portfolio.open();
+    } );
+  } );
+
+  ( window as any ).monnomPortfolio = portfolio;
 
   const closeAllOffcanvases = () => {
     contact.close();
     about.close();
+    portfolio.close();
   }
 
   const logos = document.getElementsByClassName( "monnom-header__logo" );
@@ -34,7 +47,7 @@ const init = () => {
 
   }
 
-  assignLink( "monnomPortfolioLink", "monnomPortfolio", false );
+  // assignLink( "monnomPortfolioLink", "monnomPortfolio", false );
   assignLink( "monnomFacebookLink", "monnomFacebook" );
   assignLink( "monnomInstagramLink", "monnomInstagram" );
   assignLink( "monnomLinkedinLink", "monnomLinkedin" );
